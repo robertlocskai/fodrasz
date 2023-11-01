@@ -4,6 +4,7 @@ const helmet = require('helmet');
 const cors = require('cors');
 const middlewares = require('./app.middlewares');
 const auth = require('./api/auth/auth.routes');
+const shop = require('./api/shop/shop.routes');
 
 // create express app instance
 const app = express();
@@ -15,7 +16,8 @@ app.use(cors());
 app.use(express.json());
 
 // routes
-app.use('/api/auth', auth);
+//app.use('/api/auth', auth);
+app.use('/api/shop', shop);
 
 // error handler
 app.use(middlewares.errorHandler);
