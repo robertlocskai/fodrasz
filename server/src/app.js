@@ -19,7 +19,7 @@ app.use(express.json());
 app.use(authMiddlewares.checkTokenSetUser);
 
 // routes
-//app.use('/api/auth', auth);
+app.use('/api/auth', auth);
 app.use('/api/shop', shop);
 app.use('/api/services', services);
 
