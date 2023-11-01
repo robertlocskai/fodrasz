@@ -17,6 +17,26 @@ const getAll = async (req, res, next) => {
   }
 };
 
+//Get one shop
+const getShop = async (req, res, next) => {
+  try {
+    const {
+      params: { id },
+    } = req;
+
+    const shop = await shops.findOne({ _id: id });
+
+    if (!shop) {
+      res.status(404);
+      throw new Error("Couldn't find this barber shop in the database.");
+    }
+
+    res.status(200).send(shop);
+  } catch (err) {
+    next(err);
+  }
+};
+
 //CREATE NEW SHOP
 const createShop = async (req, res, next) => {
   try {
@@ -92,4 +112,4 @@ const editShop = async (req, res, next) => {
   }
 };
 
-module.exports = { getAll, createShop, deleteShop, editShop };
+module.exports = { getAll, createShop, deleteShop, editShop, getShop };
