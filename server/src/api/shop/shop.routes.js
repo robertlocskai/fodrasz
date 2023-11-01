@@ -1,5 +1,6 @@
 const express = require('express');
 const controller = require('./shop.controller');
+const middlewares = require('./shop.middlewares');
 const authMiddlewares = require('../auth/auth.middlewares');
 
 const router = express.Router();
@@ -16,10 +17,16 @@ router.post('/create', authMiddlewares.isLoggedIn, controller.createShop);
 router.delete(
   '/delete/:id',
   authMiddlewares.isLoggedIn,
+  middlewares.isMine,
   controller.deleteShop,
 );
 
 //Edit your barber shop
-router.patch('/edit', authMiddlewares.isLoggedIn, controller.editShop);
+router.patch(
+  '/edit/:id',
+  authMiddlewares.isLoggedIn,
+  middlewares.isMine,
+  controller.editShop,
+);
 
 module.exports = router;

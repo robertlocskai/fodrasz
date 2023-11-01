@@ -41,11 +41,11 @@ const getShop = async (req, res, next) => {
 const createShop = async (req, res, next) => {
   try {
     const {
-      body: { ownerId, name, location, phone, open },
+      body: { name, location, phone, open },
     } = req;
 
     const shop = {
-      ownerId: ownerId,
+      ownerId: req.user._id,
       name: name,
       location: location,
       phone: phone,
@@ -93,7 +93,8 @@ const deleteShop = async (req, res, next) => {
 const editShop = async (req, res, next) => {
   try {
     const {
-      body: { id, name, location, phone, open },
+      body: { name, location, phone, open },
+      params: { id },
     } = req;
 
     const editShop = await shops.update(
