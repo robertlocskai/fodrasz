@@ -12,7 +12,7 @@ router.get('/:id', controller.getShop);
 router.post('/create', controller.createShop);
 
 //Delete your barber shop
-router.delete('/delete', controller.deleteShop);
+router.delete('/delete/:id', controller.deleteShop);
 
 //Edit your barber shop
 router.patch('/edit', controller.editShop);

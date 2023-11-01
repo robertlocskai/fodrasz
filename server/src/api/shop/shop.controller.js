@@ -71,7 +71,7 @@ const createShop = async (req, res, next) => {
 const deleteShop = async (req, res, next) => {
   try {
     const {
-      body: { id: shopId },
+      params: { id: shopId },
     } = req;
 
     const shopRemove = await shops.remove({ _id: shopId });
