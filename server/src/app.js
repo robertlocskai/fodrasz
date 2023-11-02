@@ -7,6 +7,7 @@ const authMiddlewares = require('./api/auth/auth.middlewares');
 const auth = require('./api/auth/auth.routes');
 const shop = require('./api/shop/shop.routes');
 const services = require('./api/services/services.routes');
+const reservations = require('./api/reservations/reservations.routes');
 
 // create express app instance
 const app = express();
@@ -22,6 +23,7 @@ app.use(authMiddlewares.checkTokenSetUser);
 app.use('/api/auth', auth);
 app.use('/api/shop', shop);
 app.use('/api/services', services);
+app.use('/api/reservations', reservations);
 
 // error handler
 app.use(middlewares.errorHandler);
