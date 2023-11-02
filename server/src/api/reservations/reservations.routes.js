@@ -4,8 +4,8 @@ const authMiddlewares = require('../auth/auth.middlewares');
 const middlewares = require('./reservations.middlewares');
 const router = express.Router();
 
-//A bejelentkezett fodrász foglalásait jeleníti meg
-router.get('/', authMiddlewares.isLoggedIn, controller.getReservations);
+//A fodrászat(id) foglalásait jeleníti meg
+router.get('/:id', controller.getReservations);
 
 //Új időpont foglalása
 router.post('/reserve', controller.newReservation);

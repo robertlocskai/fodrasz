@@ -2,6 +2,18 @@ const reservations = require('./reservations.model');
 
 const getReservations = async (req, res, next) => {
   try {
+    const {
+      params: { id: shopId },
+    } = req;
+
+    const result = await reservations.find({ shopId: shopId, verified: true });
+
+    if (!result) {
+      res.status(404);
+      throw new Error("Couldn't get the reservations from the database.");
+    }
+
+    return res.status(200).send(result);
   } catch (err) {
     next(err);
   }
@@ -51,7 +63,7 @@ const verifyReservation = async (req, res, next) => {
       throw new Error("Couldn't get reservations from database.");
     }
 
-    const verify = await reservations.finOneAndUpdate(
+    const verify = await reservations.findOneAndUpdate(
       { _id: id },
       { $set: { verified: true } },
     );
