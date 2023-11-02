@@ -8,6 +8,7 @@ const getServices = async (req, res, next) => {
     } = req;
 
     const allServices = await services.find({ shopId: shopId });
+
     if (!allServices) {
       res.status(404);
       throw new Error('There are no services stored in the database.');
@@ -34,9 +35,7 @@ const newService = async (req, res, next) => {
       throw new Error("You don't have a barber shop attached to your account!");
     }
     //Kiszedjük a shop ID-jét, hogy az új service-ben belerakhassuk a shopId-be.
-    const shopId = shop[0]._id;
-
-    console.log('SHOP ID: ' + shopId);
+    const shopId = shop[0]._id.toString();
 
     const service = {
       shopId: shopId,
@@ -44,8 +43,6 @@ const newService = async (req, res, next) => {
       price: price,
       appointment: appointment,
     };
-
-    console.log(service);
 
     const newService = await services.insert(service);
 
