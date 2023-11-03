@@ -1,9 +1,13 @@
 const monk = require('monk');
 require('dotenv').config();
 
-const { MONGO_DB_URI } = process.env;
+const { TEST_DB_URI, MONGO_DB_URI } = process.env;
 
-const db = monk(MONGO_DB_URI);
+// use test database in test mode otherwise use default db
+const isInTest = typeof global.it === 'function';
+const dbUri = isInTest ? TEST_DB_URI : MONGO_DB_URI;
+
+const db = monk(dbUri);
 
 db.then(() => console.log('Successfully connected to MongoDB'));
 

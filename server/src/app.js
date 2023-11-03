@@ -16,12 +16,17 @@ app.use(volleyball);
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
+app.use(authMiddlewares.processAuthToken);
 app.use(authMiddlewares.checkTokenSetUser);
 
 // routes
 app.use('/api/auth', auth);
 app.use('/api/shop', shop);
 app.use('/api/services', services);
+
+app.get('/', (_req, res) => {
+  res.json({ message: 'Homepage' });
+});
 
 // error handler
 app.use(middlewares.errorHandler);

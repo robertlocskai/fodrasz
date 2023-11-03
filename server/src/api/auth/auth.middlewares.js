@@ -1,13 +1,13 @@
 const jwt = require('jsonwebtoken');
 
 /**
- * checkTokenSetUser function
+ * * Feldolgozza a felhasználó által küldött auth tokent, és beállítja a req.authToken-be
  * @param {import('express').Request} req
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
- * @returns next()
+ * @returns req.authToken = token vagy undefined
  */
-const checkTokenSetUser = (req, res, next) => {
+const processAuthToken = (req, res, next) => {
   // kiszedjük a req-ből a felhasználó által küldött tokent
   const {
     headers: { authorization: rawToken },
@@ -20,11 +20,24 @@ const checkTokenSetUser = (req, res, next) => {
   const prefix = 'Bearer ';
   const [, token] = rawToken.split(prefix);
 
-  // ha hibás a prefix, visszatérünk
-  if (!token) return next();
+  req.authToken = token;
+
+  next();
+};
+
+/**
+ * * Hitelesíti a felhasználó tokenjét, és beállítja a tartalmát a req.user-be
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @param {import('express').NextFunction} next
+ * @returns req.user = user vagy undefined
+ */
+const checkTokenSetUser = (req, res, next) => {
+  // ha nincs token beállítva, visszatérünk
+  if (!req.authToken) return next();
 
   // ha van tokenünk, ellenőrizzük
-  jwt.verify(token, process.env.SECRET, (err, user) => {
+  jwt.verify(req.authToken, process.env.SECRET, (err, user) => {
     // ha nem érvényes a token, kiirjuk a hibát
     if (err) return console.error({ err });
 
@@ -36,7 +49,7 @@ const checkTokenSetUser = (req, res, next) => {
 };
 
 /**
- * Értesíti a felhasználót, hogy nem jogosult az adott művelethez
+ * * Értesíti a felhasználót, hogy nem jogosult az adott művelethez
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
  * @returns Error | Unauthorized request!
@@ -49,7 +62,7 @@ const unAuthorized = (res, next) => {
 };
 
 /**
- * Ellenőrzi, hogy az adott felhasználó be van-e jelentkezve
+ * * Ellenőrzi, hogy az adott felhasználó be van-e jelentkezve
  * @param {import('express').Request} req
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
@@ -62,7 +75,7 @@ const isLoggedIn = (req, res, next) => {
 };
 
 /**
- * Ellenőrzi hogy az adott felhasználó rendelkezik admin jogosultsággal
+ * * Ellenőrzi hogy az adott felhasználó rendelkezik admin jogosultsággal
  * @param {import('express').Request} req
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
@@ -79,7 +92,7 @@ const isAdmin = (req, res, next) => {
 };
 
 /**
- * Ellenőrzi a kapott séma alapján, hogy a megadott adatok helyesek-e
+ * * Ellenőrzi a kapott séma alapján, hogy a megadott adatok helyesek-e
  * @param {import('joi').Schema} schema
  * @returns next() vagy next(error)
  */
@@ -95,6 +108,7 @@ const validateSchema = (schema) => async (req, res, next) => {
 
 // exportálás
 module.exports = {
+  processAuthToken,
   checkTokenSetUser,
   unAuthorized,
   isLoggedIn,
