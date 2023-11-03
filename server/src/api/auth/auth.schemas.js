@@ -2,9 +2,16 @@ const Joi = require('joi');
 
 // signup
 const signup = Joi.object({
-  name: Joi.string().alphanum().min(3).max(32).required(),
+  name: Joi.string()
+    .pattern(/^[\w\-\s]+$/)
+    .min(5)
+    .max(32)
+    .required(),
+
   email: Joi.string().email().required(),
+
   password: Joi.string().min(5).max(32).required(),
+
   confirmPassword: Joi.any()
     .equal(Joi.ref('password'))
     .required()

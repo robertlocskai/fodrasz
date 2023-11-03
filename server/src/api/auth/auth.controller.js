@@ -2,8 +2,89 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const barbers = require('./auth.model');
 
+// igaz, ha teszt módban fut a kód
+const isInTest = typeof global.it === 'function';
+
 /**
- * Regisztrál egy felhasználót
+ * * A kapott felhasználói adatokat beleteszi egy tokenbe és azt elküldi a felhasználónak
+ * @param {Object} user
+ * @param {String} user._id - A barber id-ja
+ * @param {String} user.name - A barber neve
+ * @param {String} user.email - A barber email címek
+ * @param {String} user.password - A barber jelszava
+ * @param {import('express').Response} res
+ * @param {import('express').NextFunction} next
+ */
+const respondWithToken = (user, res, next) => {
+  const expiresIn = isInTest ? '5s' : '1h';
+
+  const { password, iat, exp, ...payload } = user;
+
+  jwt.sign(payload, process.env.SECRET, { expiresIn }, (err, token) => {
+    if (err) return next(err);
+
+    res.json({ token });
+  });
+};
+
+/**
+ * * Érvényesíti a felhasználó által küldött tokent, majd visszaküldi a tartalmát
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @param {import('express').NextFunction} next
+ */
+const validateJWT = async (req, res, next) => {
+  try {
+    res.json({ user: req.user });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Set létrehozása, későbbi tokenek tárolására
+// ? [ötlet] adatbázisban való tárolás
+const tokens = new Set();
+
+/**
+ * * Ha a felhasználó által küldött token nemsokára lejár, kicseréli egy újra és visszaküldi
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @param {import('express').NextFunction} next
+ */
+const refreshToken = async (req, res, next) => {
+  try {
+    const { user, authToken } = req;
+
+    // ha a felhasználó tokenje szerepel a listában, visszatérünk egy hibaüzenettel
+    if (tokens.has(authToken)) {
+      res.status(409);
+      throw new Error('Ezzel a tokennel már igényeltél refresh tokent!');
+    }
+
+    // lejárati idő számítása
+    const expTime = user.exp * 1000;
+    const currTime = new Date().getTime();
+    const timeToExpire = (expTime - currTime) / 1000;
+    const timeLimit = isInTest ? 2.5 : 60;
+
+    // ha a token még több mint {timeLimit} másodpecig akív, visszatérünk egy hibaüzenettel
+    if (timeToExpire > timeLimit) {
+      res.status(422);
+      throw new Error(
+        `A megadott token még nem most fog lejárni! Kérlek próbálkozz később!`,
+      );
+    }
+
+    // ha a token 60 másodpercen bellül lejár, visszaküldünk a felhasználónak egy új tokent
+    respondWithToken(user, res, next);
+    tokens.add(authToken);
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * * Regisztrál egy felhasználót
  * @param {import('express').Request} req
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
@@ -44,17 +125,14 @@ const signup = async (req, res, next) => {
         'Nem sikerült létrehozni a fiókodat. Kérlek próbáld újra!',
       );
 
-    jwt.sign(newUser, process.env.SECRET, { expiresIn: '1h' }, (err, token) => {
-      if (err) return next(err);
-      res.json({ token });
-    });
+    respondWithToken(newUser, res, next);
   } catch (error) {
     next(error);
   }
 };
 
 /**
- * Bejelentkeztet egy felhasználót
+ * * Bejelentkeztet egy felhasználót
  * @param {import('express').Request} req
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
@@ -87,15 +165,7 @@ const login = async (req, res, next) => {
 
     // ha helyes a jelszó, visszaküldünk egy tokent
     // ami tárolja a felhasználó adatait
-    jwt.sign(
-      maybeUser,
-      process.env.SECRET,
-      { expiresIn: '1h' },
-      (err, token) => {
-        if (err) return next(err);
-        res.json({ token });
-      },
-    );
+    respondWithToken(maybeUser, res, next);
   } catch (error) {
     next(error);
   }
@@ -103,6 +173,8 @@ const login = async (req, res, next) => {
 
 // exportálása
 module.exports = {
+  validateJWT,
+  refreshToken,
   signup,
   login,
 };

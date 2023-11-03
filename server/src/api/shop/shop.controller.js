@@ -1,6 +1,6 @@
 const shops = require('./shop.model');
 
-//GET ALL SHOPS
+// GET ALL SHOPS
 const getAll = async (req, res, next) => {
   try {
     const shopList = await shops.find({});
@@ -17,8 +17,28 @@ const getAll = async (req, res, next) => {
   }
 };
 
-//Get one shop
-const getShop = async (req, res, next) => {
+/**
+ * * Get logged in user's barber shops
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @param {import('express').NextFunction} next
+ */
+const getByJWT = async (req, res, next) => {
+  try {
+    const {
+      user: { _id: userId },
+    } = req;
+
+    const userShops = await shops.find({ userId });
+
+    res.json({ userShops });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Get one shop
+const getById = async (req, res, next) => {
   try {
     const {
       params: { id },
@@ -37,7 +57,7 @@ const getShop = async (req, res, next) => {
   }
 };
 
-//CREATE NEW SHOP
+// CREATE NEW SHOP
 const createShop = async (req, res, next) => {
   try {
     const {
@@ -46,10 +66,10 @@ const createShop = async (req, res, next) => {
 
     const shop = {
       ownerId: req.user._id,
-      name: name,
-      location: location,
-      phone: phone,
-      open: open,
+      name,
+      location,
+      phone,
+      open,
     };
 
     const newShop = await shops.insert(shop);
@@ -67,7 +87,7 @@ const createShop = async (req, res, next) => {
   }
 };
 
-//Delete your barber shop
+// Delete your barber shop
 const deleteShop = async (req, res, next) => {
   try {
     const {
@@ -89,7 +109,7 @@ const deleteShop = async (req, res, next) => {
   }
 };
 
-//Edit your barber
+// Edit your barber
 const editShop = async (req, res, next) => {
   try {
     const {
@@ -97,12 +117,12 @@ const editShop = async (req, res, next) => {
       params: { id },
     } = req;
 
-    const editShop = await shops.update(
+    const editedShop = await shops.update(
       { _id: id },
-      { $set: { name: name, location: location, phone: phone, open: open } },
+      { $set: { name, location, phone, open } },
     );
 
-    if (!editShop) {
+    if (!editedShop) {
       res.status(409);
       throw new Error("Couldn't edit your barber shop.");
     }
@@ -113,4 +133,12 @@ const editShop = async (req, res, next) => {
   }
 };
 
-module.exports = { getAll, createShop, deleteShop, editShop, getShop };
+// exportálás
+module.exports = {
+  getAll,
+  getById,
+  getByJWT,
+  createShop,
+  deleteShop,
+  editShop,
+};

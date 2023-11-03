@@ -5,15 +5,19 @@ const authMiddlewares = require('../auth/auth.middlewares');
 
 const router = express.Router();
 
-//Get all shops
+// Get all shops
 router.get('/', controller.getAll);
-//Get one barber shop data by id
-router.get('/:id', controller.getShop);
 
-//Create a new barber shop
+// Get logged in user's barber shops
+router.get('/logged-in', controller.getByJWT);
+
+// Get one barber shop data by id
+router.get('/:id', controller.getById);
+
+// Create a new barber shop
 router.post('/create', authMiddlewares.isLoggedIn, controller.createShop);
 
-//Delete your barber shop
+// Delete your barber shop
 router.delete(
   '/delete/:id',
   authMiddlewares.isLoggedIn,
@@ -21,7 +25,7 @@ router.delete(
   controller.deleteShop,
 );
 
-//Edit your barber shop
+// Edit your barber shop
 router.patch(
   '/edit/:id',
   authMiddlewares.isLoggedIn,
