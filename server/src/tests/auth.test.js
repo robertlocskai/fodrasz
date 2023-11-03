@@ -5,6 +5,9 @@ require('dotenv').config();
 
 const app = require('../app');
 
+// todo
+// az elérési útvonalakat egy config fájlba belerakni
+
 const routes = {
   signup: '/api/auth/signup',
   login: '/api/auth/login',
