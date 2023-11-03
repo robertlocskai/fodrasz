@@ -2,6 +2,7 @@ const express = require('express');
 const controller = require('./shop.controller');
 const middlewares = require('./shop.middlewares');
 const authMiddlewares = require('../auth/auth.middlewares');
+const schemas = require('./shop.schemas');
 
 const router = express.Router();
 
@@ -15,7 +16,7 @@ router.get('/logged-in', controller.getByJWT);
 router.get('/:id', controller.getById);
 
 // Create a new barber shop
-router.post('/create', authMiddlewares.isLoggedIn, controller.createShop);
+router.post('/create', authMiddlewares.isLoggedIn, middlewares.validateSchema(schemas.newShop), controller.createShop);
 
 // Delete your barber shop
 router.delete(
