@@ -1,6 +1,11 @@
 const shops = require('./shop.model');
 
-// GET ALL SHOPS
+/**
+ * * Lekérdezi az összes fodrászatot
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @param {import('express').NextFunction} next
+ */
 const getAll = async (req, res, next) => {
   try {
     const shopList = await shops.find({});
@@ -10,15 +15,14 @@ const getAll = async (req, res, next) => {
       throw new Error('No shops found in the database.');
     }
 
-    res.status(200);
-    res.json(shopList);
+    res.json({ shopList });
   } catch (err) {
     next(err);
   }
 };
 
 /**
- * * Get logged in user's barber shops
+ * * Lekérdezi a bejelentkezett felhasználó fordászatait
  * @param {import('express').Request} req
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
@@ -29,7 +33,7 @@ const getByJWT = async (req, res, next) => {
       user: { _id: userId },
     } = req;
 
-    const userShops = await shops.find({ userId });
+    const userShops = await shops.find({ ownerId: userId });
 
     res.json({ userShops });
   } catch (error) {
@@ -37,7 +41,12 @@ const getByJWT = async (req, res, next) => {
   }
 };
 
-// Get one shop
+/**
+ * * Lekérdez agy fodrászatot az id-ja alapján
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @param {import('express').NextFunction} next
+ */
 const getById = async (req, res, next) => {
   try {
     const {
@@ -51,13 +60,18 @@ const getById = async (req, res, next) => {
       throw new Error("Couldn't find this barber shop in the database.");
     }
 
-    res.status(200).send(shop);
+    res.json({ shop });
   } catch (err) {
     next(err);
   }
 };
 
-// CREATE NEW SHOP
+/**
+ * * Létrehoz egy fodrászatot
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @param {import('express').NextFunction} next
+ */
 const createShop = async (req, res, next) => {
   try {
     const {
@@ -79,47 +93,28 @@ const createShop = async (req, res, next) => {
       throw new Error("Couldn't create your shop.");
     }
 
-    return res
-      .status(201)
-      .send({ message: 'Barber shop successfully created.' });
+    res.json({ newShop });
   } catch (err) {
     next(err);
   }
 };
 
-// Delete your barber shop
-const deleteShop = async (req, res, next) => {
-  try {
-    const {
-      params: { id: shopId },
-    } = req;
-
-    const shopRemove = await shops.remove({ _id: shopId });
-
-    if (!shopRemove) {
-      res.status(404);
-      throw new Error("Couldn't delete your shop.");
-    }
-
-    return res
-      .status(200)
-      .send({ message: 'Your barber shop got successfully deleted.' });
-  } catch (err) {
-    next(err);
-  }
-};
-
-// Edit your barber
+/**
+ * * Frissít egy fodrászatot az id-ja alapján
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @param {import('express').NextFunction} next
+ */
 const editShop = async (req, res, next) => {
   try {
     const {
-      body: { name, location, phone, open },
       params: { id },
+      body,
     } = req;
 
-    const editedShop = await shops.update(
+    const editedShop = await shops.findOneAndUpdate(
       { _id: id },
-      { $set: { name, location, phone, open } },
+      { $set: { ...body } },
     );
 
     if (!editedShop) {
@@ -127,7 +122,32 @@ const editShop = async (req, res, next) => {
       throw new Error("Couldn't edit your barber shop.");
     }
 
-    res.status(200).send({ message: 'Changes were made!' });
+    res.json({ editedShop });
+  } catch (err) {
+    next(err);
+  }
+};
+
+/**
+ * * Töröl egy fodrászatot az id-ja alapján
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @param {import('express').NextFunction} next
+ */
+const deleteShop = async (req, res, next) => {
+  try {
+    const {
+      params: { id: shopId },
+    } = req;
+
+    const shopRemove = await shops.findOneAndDelete({ _id: shopId });
+
+    if (!shopRemove) {
+      res.status(404);
+      throw new Error("Couldn't delete your shop.");
+    }
+
+    res.json({ message: 'Your barber shop got successfully deleted.' });
   } catch (err) {
     next(err);
   }
@@ -139,6 +159,6 @@ module.exports = {
   getById,
   getByJWT,
   createShop,
-  deleteShop,
   editShop,
+  deleteShop,
 };

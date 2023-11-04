@@ -6,7 +6,7 @@ const getReservations = async (req, res, next) => {
       params: { id: shopId },
     } = req;
 
-    const result = await reservations.find({ shopId: shopId, verified: true });
+    const result = await reservations.find({ shopId, verified: true });
 
     if (!result) {
       res.status(404);
@@ -26,12 +26,12 @@ const newReservation = async (req, res, next) => {
     } = req;
 
     const reservation = {
-      shopId: shopId,
-      serviceId: serviceId,
-      appointment: appointment,
-      name: name,
-      email: email,
-      phone: phone,
+      shopId,
+      serviceId,
+      appointment,
+      name,
+      email,
+      phone,
       verified: false,
     };
 

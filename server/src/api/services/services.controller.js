@@ -1,7 +1,14 @@
 const services = require('./services.model');
 const shops = require('../shop/shop.model');
 
-const getServices = async (req, res, next) => {
+/**
+ * * Lekérdezi az összes szolgáltatást ami az adott fodrászathoz tartozik (shopId)
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @param {import('express').NextFunction} next
+ */
+
+const getByShopId = async (req, res, next) => {
   try {
     const {
       params: { id: shopId },
@@ -13,30 +20,23 @@ const getServices = async (req, res, next) => {
       throw new Error('There are no services stored in the database.');
     }
 
-    return res.status(200).send(allServices);
+    res.json({ allServices });
   } catch (err) {
     next(err);
   }
 };
 
+/**
+ * * Létrehoz egy szolgáltatást, amit hozzákapcsol az adott fodrászathoz (a shopId alapján)
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @param {import('express').NextFunction} next
+ */
 const newService = async (req, res, next) => {
   try {
     const {
-      user: { _id: userId },
-      body: { name, price, appointment },
+      body: { shopId, name, price, appointment },
     } = req;
-
-    // Lekérjük a shopot ami a useré
-    const shop = await shops.find({ ownerId: userId });
-
-    if (!shop) {
-      res.status(404);
-      throw new Error("You don't have a barber shop attached to your account!");
-    }
-    // Kiszedjük a shop ID-jét, hogy az új service-ben belerakhassuk a shopId-be.
-    const shopId = shop[0]._id;
-
-    console.log(`SHOP ID: ${shopId}`);
 
     const service = {
       shopId,
@@ -52,10 +52,10 @@ const newService = async (req, res, next) => {
       throw new Error("Couldn't add a new service.");
     }
 
-    return res.status(201).send({ message: 'New service added successfully!' });
+    res.json({ insertedService });
   } catch (err) {
     next(err);
   }
 };
 
-module.exports = { getServices, newService };
+module.exports = { getByShopId, newService };

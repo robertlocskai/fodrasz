@@ -39,7 +39,10 @@ const checkTokenSetUser = (req, res, next) => {
   // ha van tokenünk, ellenőrizzük
   jwt.verify(req.authToken, process.env.SECRET, (err, user) => {
     // ha nem érvényes a token, kiirjuk a hibát
-    if (err) return console.error({ err });
+    if (err)
+      return console.error(
+        `Failed to authenticate token: ${err.message || err}`,
+      );
 
     // ha érvényes a token, elmentjük a tartalmát a req-be
     req.user = user;

@@ -1,15 +1,12 @@
 const shops = require('./shop.model');
 
 const isMine = async (req, res, next) => {
-  console.log(`Shop ID: ${req.params.id}`);
-  console.log(`User ID: ${req.user._id}`);
   try {
     const {
       params: { id: shopId },
     } = req;
 
     const shop = await shops.findOne({ _id: shopId });
-    console.log(`Shop owner ID: ${shop.ownerId}`);
 
     if (!shop) {
       res.status(404);
@@ -27,4 +24,17 @@ const isMine = async (req, res, next) => {
   }
 };
 
-module.exports = { isMine };
+/**
+ * @param {import('joi').Schema} schema
+ */
+const validateSchema = (schema) => async (req, res, next) => {
+  try {
+    await schema.validateAsync(req.body);
+    next();
+  } catch (error) {
+    res.status(422);
+    next(error);
+  }
+};
+
+module.exports = { isMine, validateSchema };

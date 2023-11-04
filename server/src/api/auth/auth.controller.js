@@ -2,9 +2,6 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const barbers = require('./auth.model');
 
-// igaz, ha teszt módban fut a kód
-const isInTest = typeof global.it === 'function';
-
 /**
  * * A kapott felhasználói adatokat beleteszi egy tokenbe és azt elküldi a felhasználónak
  * @param {Object} user
@@ -16,11 +13,9 @@ const isInTest = typeof global.it === 'function';
  * @param {import('express').NextFunction} next
  */
 const respondWithToken = (user, res, next) => {
-  const expiresIn = isInTest ? '5s' : '1h';
-
   const { password, iat, exp, ...payload } = user;
 
-  jwt.sign(payload, process.env.SECRET, { expiresIn }, (err, token) => {
+  jwt.sign(payload, process.env.SECRET, { expiresIn: '1h' }, (err, token) => {
     if (err) return next(err);
 
     res.json({ token });
@@ -65,7 +60,7 @@ const refreshToken = async (req, res, next) => {
     const expTime = user.exp * 1000;
     const currTime = new Date().getTime();
     const timeToExpire = (expTime - currTime) / 1000;
-    const timeLimit = isInTest ? 2.5 : 60;
+    const timeLimit = 60;
 
     // ha a token még több mint {timeLimit} másodpecig akív, visszatérünk egy hibaüzenettel
     if (timeToExpire > timeLimit) {

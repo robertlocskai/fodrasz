@@ -1,10 +1,13 @@
+/**
+ *
+ * @param {Error} err
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @param {import('express').NextFunction} next
+ */
 const errorHandler = (err, req, res, next) => {
-  const errStatus = err.statusCode || res.statusCode || 500;
+  const errStatus = res.statusCode === 200 ? 500 : res.statusCode;
   const errMsg = err.message || 'Something went wrong (unknown error)';
-
-  console.log('=======================');
-
-  console.log({ err });
 
   res.status(errStatus).json({
     success: false,
@@ -12,8 +15,6 @@ const errorHandler = (err, req, res, next) => {
     message: errMsg,
     stack: err.stack,
   });
-
-  console.log('=======================');
 };
 
 module.exports = { errorHandler };
