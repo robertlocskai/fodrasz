@@ -26,14 +26,24 @@ const isMine = async (req, res, next) => {
 
 /**
  * @param {import('joi').Schema} schema
+<<<<<<< HEAD
+=======
+ * @returns next() vagy next(error)
+>>>>>>> a04912548f01acec2f6774981ff8043c74bfdf98
  */
 const validateSchema = (schema) => async (req, res, next) => {
   try {
     await schema.validateAsync(req.body);
     next();
+<<<<<<< HEAD
   } catch (error) {
     res.status(422);
     next(error);
+=======
+  } catch (err) {
+    res.status(422);
+    next(err);
+>>>>>>> a04912548f01acec2f6774981ff8043c74bfdf98
   }
 };
 
