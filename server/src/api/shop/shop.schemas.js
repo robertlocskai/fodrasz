@@ -1,5 +1,6 @@
 const Joi = require('joi');
 
+<<<<<<< HEAD
 const upload = Joi.object({
   name: Joi.string()
     .min(4)
@@ -26,6 +27,8 @@ const update = Joi.object({
   .required();
 
 module.exports = { upload, update };
+=======
+>>>>>>> a04912548f01acec2f6774981ff8043c74bfdf98
 const newShop = Joi.object({
   name: Joi.string().min(3).max(50).required(),
   ownerId: Joi.string().required(),
