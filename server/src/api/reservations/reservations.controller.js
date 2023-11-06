@@ -1,28 +1,94 @@
 const reservations = require('./reservations.model');
 
-const getReservations = async (req, res, next) => {
+/**
+ * * Visszaadja az adott foglalást (reservationID)
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @param {import('express').NextFunction} next
+ */
+const getById = async (req, res, next) => {
+  try {
+    const {
+      params: { id: reservationId },
+    } = req;
+
+    const reservation = await reservations.findOne({ _id: reservationId });
+
+    if (!reservation) {
+      res.status(404);
+      throw new Error('Nem sikerült lekérni a foglalásodat az adatbázisból!');
+    }
+
+    res.json({ reservation });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * * Visszaadja az ÖSSZES foglalást, amely egy adott fodrászathoz tartozik (shopID)
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @param {import('express').NextFunction} next
+ */
+const getByShopId = async (req, res, next) => {
   try {
     const {
       params: { id: shopId },
     } = req;
 
-    const result = await reservations.find({ shopId, verified: true });
+    // ? [ötlet] - 'verified' lehet nem kell, mert így a fodrász is használhatja ezt az útvonalat
+    const shopReservations = await reservations.find({
+      shopId,
+      verified: true,
+    });
 
-    if (!result) {
+    if (!shopReservations) {
       res.status(404);
       throw new Error("Couldn't get the reservations from the database.");
     }
 
-    return res.status(200).send(result);
+    res.json({ shopReservations });
   } catch (err) {
     next(err);
   }
 };
 
+/**
+ * * Visszaadja az ÖSSZES foglalást, ami az adott szolgáltatáshoz
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @param {import('express').NextFunction} next
+ */
+const getByServiceId = async (req, res, next) => {
+  try {
+    const {
+      params: { id: serviceId },
+    } = req;
+
+    const serviceReservations = await reservations.find({ serviceId });
+
+    if (!serviceReservations) {
+      res.status(422);
+      throw new Error('Nem sikerült lekérni a foglalásokat! (getByServiceID)');
+    }
+
+    res.json({ serviceReservations });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * * Létrehoz egy foglalást
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @param {import('express').NextFunction} next
+ */
 const newReservation = async (req, res, next) => {
   try {
     const {
-      body: { shopId, serviceId, appointment, name, email, phone, verified },
+      body: { shopId, serviceId, appointment, name, email, phone },
     } = req;
 
     const reservation = {
@@ -50,6 +116,12 @@ const newReservation = async (req, res, next) => {
   }
 };
 
+/**
+ * * Visszaigazol egy foglalást
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @param {import('express').NextFunction} next
+ */
 const verifyReservation = async (req, res, next) => {
   try {
     const {
@@ -81,4 +153,38 @@ const verifyReservation = async (req, res, next) => {
   }
 };
 
-module.exports = { getReservations, newReservation, verifyReservation };
+/**
+ * * Töröl egy foglalást
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @param {import('express').NextFunction} next
+ */
+const del = async (req, res, next) => {
+  try {
+    const {
+      params: { id: reservationId },
+    } = req;
+
+    const deletedReservation = await reservations.findOneAndDelete({
+      _id: reservationId,
+    });
+
+    if (!deletedReservation) {
+      res.status(422);
+      throw new Error('Hiba történt a foglalás törlése közben!');
+    }
+
+    res.json({ deletedReservation });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = {
+  getById,
+  getByShopId,
+  getByServiceId,
+  newReservation,
+  verifyReservation,
+  del,
+};

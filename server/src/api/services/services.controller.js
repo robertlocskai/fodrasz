@@ -38,6 +38,16 @@ const newService = async (req, res, next) => {
       body: { shopId, name, price, appointment },
     } = req;
 
+    const userShop = await shops.findOne({
+      ownerId: req.user._id,
+      _id: shopId,
+    });
+
+    if (!userShop) {
+      res.status(422);
+      throw new Error('A megadott shopID nem a te fiókodhoz tartozik');
+    }
+
     const service = {
       shopId,
       name,
