@@ -32,19 +32,6 @@ router.patch(
   controller.editShop,
 );
 
-router.post(
-  '/create',
-  authMiddlewares.isLoggedIn,
-  middlewares.validateSchema(schemas.newShop),
-  controller.createShop,
-);
-router.post(
-  '/create',
-  authMiddlewares.isLoggedIn,
-  middlewares.validateSchema(schemas.newShop),
-  controller.createShop,
-);
-
 // Delete your barber shop
 router.delete(
   '/delete/:id',
