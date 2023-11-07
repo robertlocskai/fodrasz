@@ -110,4 +110,29 @@ const editService = async (req, res, next) => {
   }
 };
 
-module.exports = { getByShopId, newService, getService, editService };
+const deleteService = async (req, res, next) => {
+  try {
+    const {
+      params: { id },
+    } = req;
+
+    const result = await services.remove({ _id: id });
+
+    if (!result) {
+      res.status(409);
+      throw new Error('Nem lehetett végrehajtani a kérést.');
+    }
+
+    res.json('Szolgáltatás sikeresen törölve.');
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports = {
+  getByShopId,
+  newService,
+  getService,
+  editService,
+  deleteService,
+};

@@ -20,6 +20,12 @@ router.patch(
 );
 
 //Szolgáltatás törlése ID alapján
+router.delete(
+  '/delete/:id',
+  authMiddlewares.isLoggedIn,
+  middlewares.isMine,
+  controller.deleteService,
+);
 
 // Add a new service *TO YOUR OWN* barber shop
 router.post('/add', controller.newService);
