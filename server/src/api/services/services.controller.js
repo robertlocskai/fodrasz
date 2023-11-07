@@ -68,4 +68,23 @@ const newService = async (req, res, next) => {
   }
 };
 
-module.exports = { getByShopId, newService };
+const getService = async (req, res, next) => {
+  try {
+    const {
+      params: { id },
+    } = req;
+
+    const service = await services.findOne({ _id: id });
+
+    if (!service) {
+      res.status(404);
+      throw new Error('Nem lehetett lekérni ezt a szolgáltatást.');
+    }
+
+    res.status(200).send({ service });
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports = { getByShopId, newService, getService };
