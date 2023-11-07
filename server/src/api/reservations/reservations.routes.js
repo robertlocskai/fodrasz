@@ -2,6 +2,7 @@ const express = require('express');
 const controller = require('./reservations.controller');
 const authMiddlewares = require('../auth/auth.middlewares');
 const middlewares = require('./reservations.middlewares');
+const schemas = require('./reservations.schemas');
 
 const router = express.Router();
 
@@ -18,6 +19,7 @@ router.get('/service/:id', controller.getByServiceId);
 router.post(
   '/reserve',
   middlewares.shopServiceConnection,
+  middlewares.validateSchema(schemas.upload),
   controller.newReservation,
 );
 
