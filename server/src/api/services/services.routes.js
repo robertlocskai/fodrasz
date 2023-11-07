@@ -1,5 +1,7 @@
 const express = require('express');
 const controller = require('./services.controller');
+const authMiddlewares = require('../auth/auth.middlewares');
+const middlewares = require('./services.middlewares');
 
 const router = express.Router();
 
@@ -10,6 +12,12 @@ router.get('/shop/:id', controller.getByShopId);
 router.get('/:id', controller.getService);
 
 //Szolgáltatás szerkesztése ID alapján
+router.patch(
+  '/update/:id',
+  authMiddlewares.isLoggedIn,
+  middlewares.isMine,
+  controller.editService,
+);
 
 //Szolgáltatás törlése ID alapján
 

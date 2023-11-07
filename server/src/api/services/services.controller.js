@@ -87,4 +87,27 @@ const getService = async (req, res, next) => {
   }
 };
 
-module.exports = { getByShopId, newService, getService };
+const editService = async (req, res, next) => {
+  try {
+    const {
+      params: { id },
+      body,
+    } = req;
+
+    const result = await services.findOneAndUpdate(
+      { _id: id },
+      { $set: { ...body } },
+    );
+
+    if (!result) {
+      res.status(409);
+      throw new Error('Nem lehetett végrehajtani a kérést.');
+    }
+
+    res.status(200).send({ result });
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports = { getByShopId, newService, getService, editService };
