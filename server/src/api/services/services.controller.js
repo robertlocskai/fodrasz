@@ -14,13 +14,13 @@ const getByShopId = async (req, res, next) => {
       params: { id: shopId },
     } = req;
 
-    const allServices = await services.find({ shopId });
-    if (!allServices) {
+    const shopServices = await services.find({ shopId });
+    if (!shopServices) {
       res.status(404);
       throw new Error('There are no services stored in the database.');
     }
 
-    res.json({ allServices });
+    res.json({ shopServices });
   } catch (err) {
     next(err);
   }

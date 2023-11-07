@@ -24,11 +24,7 @@ router.post(
 );
 
 // Foglalt időpont visszaigazolása emailben
-router.post(
-  '/verify/:id',
-  middlewares.isVerified,
-  controller.verifyReservation,
-);
+router.get('/verify/:token', controller.verifyReservation);
 
 // Törli a foglalást az id alapján (reservationID)
 router.delete('/delete/:id', controller.del);

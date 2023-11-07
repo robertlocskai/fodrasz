@@ -12,7 +12,7 @@ router.get('/shop/:id', controller.getByShopId);
 // Szolgáltatás lekérése ID alapján
 router.get('/:id', controller.getService);
 
-//Szolgáltatás szerkesztése ID alapján
+// Szolgáltatás szerkesztése ID alapján
 router.patch(
   '/update/:id',
   authMiddlewares.isLoggedIn,
@@ -21,7 +21,7 @@ router.patch(
   controller.editService,
 );
 
-//Szolgáltatás törlése ID alapján
+// Szolgáltatás törlése ID alapján
 router.delete(
   '/delete/:id',
   authMiddlewares.isLoggedIn,

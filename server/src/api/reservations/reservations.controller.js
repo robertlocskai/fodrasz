@@ -1,4 +1,6 @@
+const jwt = require('jsonwebtoken');
 const reservations = require('./reservations.model');
+const { transporter } = require('../../email/main');
 
 /**
  * * Visszaadja az adott foglalást (reservationID)
@@ -55,7 +57,7 @@ const getByShopId = async (req, res, next) => {
 };
 
 /**
- * * Visszaadja az ÖSSZES foglalást, ami az adott szolgáltatáshoz
+ * * Visszaadja az ÖSSZES foglalást, ami az adott szolgáltatáshoz tartozik (serviceID)
  * @param {import('express').Request} req
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
@@ -108,9 +110,35 @@ const newReservation = async (req, res, next) => {
       throw new Error("Couldn't make the reservation.");
     }
 
-    return res
-      .status(201)
-      .send({ message: 'Reservation was successfully made!' });
+    const signedToken = await new Promise((resolve, reject) => {
+      jwt.sign(
+        { appointmentId: result._id },
+        process.env.SECRET,
+        {
+          expiresIn: '12h',
+        },
+        (err, token) => {
+          if (err) reject(err);
+          resolve(token);
+        },
+      );
+    });
+
+    const info = await transporter.sendMail({
+      from: `Globytes <${process.env.GMAIL_USERNAME}`,
+      to: email,
+      subject: 'Foglalás visszaigazolás',
+      html: `<div>Név: ${name}</div>
+             <div>Email: ${email}</div>
+             <div>Telefonszám: ${phone}</div>
+             <div>Időpont: ${appointment}</div>
+             <div>Link: http://localhost:3000/api/reservations/verify/${signedToken}</div>`,
+    });
+
+    console.log('EMAIL WAS SENT SUCCESSFULLY');
+    console.log({ info });
+
+    res.json({ reservation });
   } catch (err) {
     next(err);
   }
@@ -125,10 +153,17 @@ const newReservation = async (req, res, next) => {
 const verifyReservation = async (req, res, next) => {
   try {
     const {
-      params: { id },
+      params: { token },
     } = req;
 
-    const result = await reservations.find({ _id: id });
+    const verifyToken = await new Promise((resolve, reject) => {
+      jwt.verify(token, process.env.SECRET, (err, tokenn) => {
+        if (err) reject(err);
+        resolve(tokenn);
+      });
+    });
+
+    const result = await reservations.find({ _id: verifyToken.appointmentId });
 
     if (!result) {
       res.status(404);
@@ -136,7 +171,7 @@ const verifyReservation = async (req, res, next) => {
     }
 
     const verify = await reservations.findOneAndUpdate(
-      { _id: id },
+      { _id: verifyToken.appointmentId },
       { $set: { verified: true } },
     );
 

@@ -36,12 +36,12 @@ app.use(middlewares.errorHandler);
 // export
 module.exports = app;
 
-// home page flow
-// GET /api/shops/ => megkapjuk az összes fodrászatot
-// - amikor a felhasználó kiválaszt egy fodrászatot,
-//   elkerül egy ilyen linkre .../fodraszat/id
-// - ezen az oldalon a fodrászat id-ja alapján,
-//   lekrédezzük a szolgáltatásokat
-// - amikor a felhasználó rákattint egy szolgáltatásra,
-//   lekérdezzük az adott foglalásokat a szolgáltatás id-ja alapján,
-//   a foglalásoknál a személyes adatok ne jelenjenek meg
+// hiányzik
+// shop, reservations, services tesztek megírása
+// services
+//  - GET /:id
+//  - PATCH /update/:id
+//  - DELETE /delete/:id
+
+// reservations
+// meg kell nézni, hogy a serviceID és a shopID között van-e kapcsolat
