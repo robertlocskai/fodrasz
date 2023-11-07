@@ -15,7 +15,11 @@ router.get('/shop/:id', controller.getByShopId);
 router.get('/service/:id', controller.getByServiceId);
 
 // Új időpont foglalása
-router.post('/reserve', controller.newReservation);
+router.post(
+  '/reserve',
+  middlewares.shopServiceConnection,
+  controller.newReservation,
+);
 
 // Foglalt időpont visszaigazolása emailben
 router.post(

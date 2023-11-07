@@ -1,4 +1,5 @@
 const reservations = require('./reservations.model');
+const services = require('../services/services.model');
 
 const isVerified = async (req, res, next) => {
   try {
@@ -24,4 +25,26 @@ const isVerified = async (req, res, next) => {
   }
 };
 
-module.exports = { isVerified };
+const shopServiceConnection = async (req, res, next) => {
+  try {
+    const {
+      body: { serviceId, shopId },
+    } = req;
+
+    //Service lekérése ID alapján, ahol shopId = shopId
+    const service = await services.findOne({ _id: serviceId, shopId: shopId });
+
+    if (!service) {
+      res.status(404);
+      throw new Error(
+        'Nincs ilyen szolgáltatás, melynek ez a fodrászat a tulajdonosa.',
+      );
+    }
+
+    next();
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports = { isVerified, shopServiceConnection };
