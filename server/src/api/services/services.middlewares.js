@@ -31,4 +31,18 @@ const isMine = async (req, res, next) => {
   }
 };
 
-module.exports = { isMine };
+/**
+ * @param {import('joi').Schema} schema
+ * @returns next() vagy next(error)
+ */
+const validateSchema = (schema) => async (req, res, next) => {
+  try {
+    await schema.validateAsync(req.body);
+    next();
+  } catch (error) {
+    res.status(422);
+    next(error);
+  }
+};
+
+module.exports = { isMine, validateSchema };

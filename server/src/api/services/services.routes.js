@@ -2,6 +2,7 @@ const express = require('express');
 const controller = require('./services.controller');
 const authMiddlewares = require('../auth/auth.middlewares');
 const middlewares = require('./services.middlewares');
+const schemas = require('./services.schemas');
 
 const router = express.Router();
 
@@ -16,6 +17,7 @@ router.patch(
   '/update/:id',
   authMiddlewares.isLoggedIn,
   middlewares.isMine,
+  middlewares.validateSchema(schemas.update),
   controller.editService,
 );
 
@@ -28,6 +30,11 @@ router.delete(
 );
 
 // Add a new service *TO YOUR OWN* barber shop
-router.post('/add', controller.newService);
+router.post(
+  '/add',
+  authMiddlewares.isLoggedIn,
+  middlewares.validateSchema(schemas.upload),
+  controller.newService,
+);
 
 module.exports = router;
