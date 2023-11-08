@@ -1,0 +1,30 @@
+:root {
+  --primary: #dd5656;
+  --primaryDarker: hsl(0, 67%, 55%);
+  --text: #1e1e1e;
+}
+body {
+  background-color: #f2f2f2;
+}
+
+* {
+  font-family: Montserrat;
+}
+
+/*BUTTONS*/
+.btn-primary {
+  color: white;
+}
+.btn-primary:focus {
+  color: white !important;
+}
+.btn:hover {
+  color: white;
+}
+.btn-outline-primary,
+.btn-outline-primary:hover,
+.btn-outline-primary:focus {
+  color: var(--text);
+  border-color: var(--text) !important;
+  background-color: white !important;
+}
