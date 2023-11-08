@@ -44,7 +44,7 @@
 .navbar {
   left: 0;
   right: 0;
-  background-color: white;
+  background-color: white !important;
   border-radius: 6px;
   margin: 2rem;
 }
