@@ -6,18 +6,15 @@
         class="navbar-toggler"
         type="button"
         data-bs-toggle="collapse"
-        data-bs-target="#navbarScroll"
-        aria-controls="navbarScroll"
+        data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent"
         aria-expanded="false"
         aria-label="Toggle navigation"
       >
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse" id="navbarScroll">
-        <ul
-          class="navbar-nav me-auto my-3 my-lg-0 navbar-nav-scroll"
-          style="--bs-scroll-height: 100px"
-        ></ul>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto my-3 my-lg-0"></ul>
         <form class="d-flex">
           <input
             class="form-control me-3"
@@ -45,7 +42,6 @@
 <script setup></script>
 <style scoped>
 .navbar {
-  position: absolute;
   left: 0;
   right: 0;
   background-color: white;
