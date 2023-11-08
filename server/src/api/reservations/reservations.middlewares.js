@@ -61,4 +61,31 @@ const validateSchema = (schema) => async (req, res, next) => {
   }
 };
 
-module.exports = { isVerified, shopServiceConnection, validateSchema };
+const checkIfAvailable = async (req, res, next) => {
+  try {
+    const {
+      body: { shopId, appointment },
+    } = req;
+
+    const result = await reservations.findOne({
+      shopId: shopId,
+      appointment: appointment,
+    });
+
+    if (result) {
+      res.status(409);
+      throw new Error('Már van ekkorra foglalva időpont.');
+    }
+
+    next();
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports = {
+  isVerified,
+  shopServiceConnection,
+  validateSchema,
+  checkIfAvailable,
+};

@@ -20,6 +20,7 @@ router.post(
   '/reserve',
   middlewares.shopServiceConnection,
   middlewares.validateSchema(schemas.upload),
+  middlewares.checkIfAvailable,
   controller.newReservation,
 );
 
