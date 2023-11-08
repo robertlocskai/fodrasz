@@ -1,5 +1,11 @@
 const shops = require('./shop.model');
 
+/**
+ * * Ellenőrzi, hogy a felhasználó a saját szolgáltatására hivatkozott-e
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @param {import('express').NextFunction} next
+ */
 const isMine = async (req, res, next) => {
   try {
     const {
@@ -25,8 +31,8 @@ const isMine = async (req, res, next) => {
 };
 
 /**
+ * * Ellenőrzi a kapott séma alapján, hogy a megadott adatok helyesek-e
  * @param {import('joi').Schema} schema
- * @returns next() vagy next(error)
  */
 const validateSchema = (schema) => async (req, res, next) => {
   try {

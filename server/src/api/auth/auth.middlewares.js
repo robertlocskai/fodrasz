@@ -5,7 +5,6 @@ const jwt = require('jsonwebtoken');
  * @param {import('express').Request} req
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
- * @returns req.authToken = token vagy undefined
  */
 const processAuthToken = (req, res, next) => {
   // kiszedjük a req-ből a felhasználó által küldött tokent
@@ -30,7 +29,6 @@ const processAuthToken = (req, res, next) => {
  * @param {import('express').Request} req
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
- * @returns req.user = user vagy undefined
  */
 const checkTokenSetUser = (req, res, next) => {
   // ha nincs token beállítva, visszatérünk
@@ -55,7 +53,6 @@ const checkTokenSetUser = (req, res, next) => {
  * * Értesíti a felhasználót, hogy nem jogosult az adott művelethez
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
- * @returns Error | Unauthorized request!
  */
 const unAuthorized = (res, next) => {
   const error = new Error('Unauthorized request!');
@@ -69,11 +66,9 @@ const unAuthorized = (res, next) => {
  * @param {import('express').Request} req
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
- * @returns next()
  */
 const isLoggedIn = (req, res, next) => {
   if (!req.user) return unAuthorized(res, next);
-
   next();
 };
 
@@ -82,22 +77,15 @@ const isLoggedIn = (req, res, next) => {
  * @param {import('express').Request} req
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
- * @returns next() vagy Error | Unauthorized request!
  */
 const isAdmin = (req, res, next) => {
-  const {
-    user: { role },
-  } = req;
-
-  if (role !== 'admin') return unAuthorized(res, next);
-
+  if (req.role !== 'admin') return unAuthorized(res, next);
   next();
 };
 
 /**
  * * Ellenőrzi a kapott séma alapján, hogy a megadott adatok helyesek-e
  * @param {import('joi').Schema} schema
- * @returns next() vagy next(error)
  */
 const validateSchema = (schema) => async (req, res, next) => {
   try {

@@ -2,12 +2,36 @@ const services = require('./services.model');
 const shops = require('../shop/shop.model');
 
 /**
- * * Lekérdezi az összes szolgáltatást ami az adott fodrászathoz tartozik (shopId)
+ * * Lekérdezi az adott szolgáltatást az id alapján (serviceID)
  * @param {import('express').Request} req
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
  */
+const getById = async (req, res, next) => {
+  try {
+    const {
+      params: { id },
+    } = req;
 
+    const allServices = await services.findOne({ _id: id });
+
+    if (!allServices) {
+      res.status(404);
+      throw new Error('Nem lehetett lekérni ezt a szolgáltatást.');
+    }
+
+    res.status(200).send({ allServices });
+  } catch (err) {
+    next(err);
+  }
+};
+
+/**
+ * * Lekérdezi az ÖSSZES szolgáltatást ami az adott fodrászathoz tartozik (shopId)
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @param {import('express').NextFunction} next
+ */
 const getByShopId = async (req, res, next) => {
   try {
     const {
@@ -32,7 +56,7 @@ const getByShopId = async (req, res, next) => {
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
  */
-const newService = async (req, res, next) => {
+const createService = async (req, res, next) => {
   try {
     const {
       body: { shopId, name, price, appointment },
@@ -68,26 +92,7 @@ const newService = async (req, res, next) => {
   }
 };
 
-const getService = async (req, res, next) => {
-  try {
-    const {
-      params: { id },
-    } = req;
-
-    const service = await services.findOne({ _id: id });
-
-    if (!service) {
-      res.status(404);
-      throw new Error('Nem lehetett lekérni ezt a szolgáltatást.');
-    }
-
-    res.status(200).send({ service });
-  } catch (err) {
-    next(err);
-  }
-};
-
-const editService = async (req, res, next) => {
+const updateService = async (req, res, next) => {
   try {
     const {
       params: { id },
@@ -130,9 +135,9 @@ const deleteService = async (req, res, next) => {
 };
 
 module.exports = {
+  getById,
   getByShopId,
-  newService,
-  getService,
-  editService,
+  createService,
+  updateService,
   deleteService,
 };

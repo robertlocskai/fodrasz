@@ -194,7 +194,7 @@ const verifyReservation = async (req, res, next) => {
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
  */
-const del = async (req, res, next) => {
+const deleteReservation = async (req, res, next) => {
   try {
     const {
       params: { id: reservationId },
@@ -221,5 +221,5 @@ module.exports = {
   getByServiceId,
   newReservation,
   verifyReservation,
-  del,
+  deleteReservation,
 };

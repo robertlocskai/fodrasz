@@ -28,5 +28,5 @@ router.post(
 router.get('/verify/:token', controller.verifyReservation);
 
 // Törli a foglalást az id alapján (reservationID)
-router.delete('/delete/:id', controller.del);
+router.delete('/delete/:id', controller.deleteReservation);
 module.exports = router;

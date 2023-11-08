@@ -1,7 +1,7 @@
 const shops = require('./shop.model');
 
 /**
- * * Lekérdezi az összes fodrászatot
+ * * Lekérdezi az ÖSSZES fodrászatot
  * @param {import('express').Request} req
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
@@ -16,6 +16,31 @@ const getAll = async (req, res, next) => {
     }
 
     res.json({ shopList });
+  } catch (err) {
+    next(err);
+  }
+};
+
+/**
+ * * Lekérdez egy fodrászatot az id-ja alapján
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @param {import('express').NextFunction} next
+ */
+const getById = async (req, res, next) => {
+  try {
+    const {
+      params: { id },
+    } = req;
+
+    const shop = await shops.findOne({ _id: id });
+
+    if (!shop) {
+      res.status(404);
+      throw new Error("Couldn't find this barber shop in the database.");
+    }
+
+    res.json({ shop });
   } catch (err) {
     next(err);
   }
@@ -38,31 +63,6 @@ const getByJWT = async (req, res, next) => {
     res.json({ userShops });
   } catch (error) {
     next(error);
-  }
-};
-
-/**
- * * Lekérdez agy fodrászatot az id-ja alapján
- * @param {import('express').Request} req
- * @param {import('express').Response} res
- * @param {import('express').NextFunction} next
- */
-const getById = async (req, res, next) => {
-  try {
-    const {
-      params: { id },
-    } = req;
-
-    const shop = await shops.findOne({ _id: id });
-
-    if (!shop) {
-      res.status(404);
-      throw new Error("Couldn't find this barber shop in the database.");
-    }
-
-    res.json({ shop });
-  } catch (err) {
-    next(err);
   }
 };
 
@@ -105,7 +105,7 @@ const createShop = async (req, res, next) => {
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
  */
-const editShop = async (req, res, next) => {
+const updateShop = async (req, res, next) => {
   try {
     const {
       params: { id },
@@ -159,6 +159,6 @@ module.exports = {
   getById,
   getByJWT,
   createShop,
-  editShop,
+  updateShop,
   deleteShop,
 };

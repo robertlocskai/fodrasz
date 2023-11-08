@@ -1,6 +1,12 @@
 const reservations = require('./reservations.model');
 const services = require('../services/services.model');
 
+/**
+ * * Ellenőrzi, hogy meg van-e erősítva már a foglalás
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @param {import('express').NextFunction} next
+ */
 const isVerified = async (req, res, next) => {
   try {
     const {
@@ -25,14 +31,21 @@ const isVerified = async (req, res, next) => {
   }
 };
 
+/**
+ * * Ellenőrzi, hogy szabad-e a kiválasztott időpont
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @param {import('express').NextFunction} next
+ */
+
 const shopServiceConnection = async (req, res, next) => {
   try {
     const {
       body: { serviceId, shopId },
     } = req;
 
-    //Service lekérése ID alapján, ahol shopId = shopId
-    const service = await services.findOne({ _id: serviceId, shopId: shopId });
+    // Service lekérése ID alapján, ahol shopId = shopId
+    const service = await services.findOne({ _id: serviceId, shopId });
 
     if (!service) {
       res.status(404);
@@ -48,8 +61,8 @@ const shopServiceConnection = async (req, res, next) => {
 };
 
 /**
+ * * Ellenőrzi a kapott séma alapján, hogy a megadott adatok helyesek-e
  * @param {import('joi').Schema} schema
- * @returns next() vagy next(error)
  */
 const validateSchema = (schema) => async (req, res, next) => {
   try {
@@ -61,6 +74,12 @@ const validateSchema = (schema) => async (req, res, next) => {
   }
 };
 
+/**
+ * * Ellenőrzi, hogy szabad-e a kiválasztott időpont
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @param {import('express').NextFunction} next
+ */
 const checkIfAvailable = async (req, res, next) => {
   try {
     const {
@@ -68,8 +87,8 @@ const checkIfAvailable = async (req, res, next) => {
     } = req;
 
     const result = await reservations.findOne({
-      shopId: shopId,
-      appointment: appointment,
+      shopId,
+      appointment,
     });
 
     if (result) {

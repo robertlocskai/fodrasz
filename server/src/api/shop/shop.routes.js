@@ -9,11 +9,11 @@ const router = express.Router();
 // Get all shops
 router.get('/', controller.getAll);
 
-// Get logged in user's barber shops
-router.get('/logged-in', authMiddlewares.isLoggedIn, controller.getByJWT);
-
 // Get one barber shop data by id
 router.get('/:id', controller.getById);
+
+// Get logged in user's barber shops
+router.get('/logged-in', authMiddlewares.isLoggedIn, controller.getByJWT);
 
 // Create a new barber shop
 router.post(
@@ -25,11 +25,11 @@ router.post(
 
 // Edit your barber shop
 router.patch(
-  '/edit/:id',
+  '/update/:id',
   authMiddlewares.isLoggedIn,
   middlewares.isMine,
   middlewares.validateSchema(schemas.update),
-  controller.editShop,
+  controller.updateShop,
 );
 
 // Delete your barber shop

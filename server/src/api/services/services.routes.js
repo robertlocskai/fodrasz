@@ -6,11 +6,19 @@ const schemas = require('./services.schemas');
 
 const router = express.Router();
 
+// Szolgáltatás lekérése ID alapján (serviceID)
+router.get('/:id', controller.getById);
+
 // Get all services of a shop, by the given id in the URL. id = shopId
 router.get('/shop/:id', controller.getByShopId);
 
-// Szolgáltatás lekérése ID alapján
-router.get('/:id', controller.getService);
+// Add a new service *TO YOUR OWN* barber shop
+router.post(
+  '/create',
+  authMiddlewares.isLoggedIn,
+  middlewares.validateSchema(schemas.upload),
+  controller.newService,
+);
 
 // Szolgáltatás szerkesztése ID alapján
 router.patch(
@@ -18,7 +26,7 @@ router.patch(
   authMiddlewares.isLoggedIn,
   middlewares.isMine,
   middlewares.validateSchema(schemas.update),
-  controller.editService,
+  controller.updateService,
 );
 
 // Szolgáltatás törlése ID alapján
@@ -27,14 +35,6 @@ router.delete(
   authMiddlewares.isLoggedIn,
   middlewares.isMine,
   controller.deleteService,
-);
-
-// Add a new service *TO YOUR OWN* barber shop
-router.post(
-  '/add',
-  authMiddlewares.isLoggedIn,
-  middlewares.validateSchema(schemas.upload),
-  controller.newService,
 );
 
 module.exports = router;
