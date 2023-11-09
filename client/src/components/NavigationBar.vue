@@ -11,7 +11,7 @@ const { isLoggedIn, barberName } = storeToRefs(authStore);
 <template>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container">
-      <a class="navbar-brand" href="/">FodraszPont</a>
+      <RouterLink :to="{ name: 'home' }" class="navbar-brand">FodraszPont</RouterLink>
 
       <button
         class="navbar-toggler"

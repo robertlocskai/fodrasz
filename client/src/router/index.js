@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import HomeView from '../views/HomeView.vue';
+import { useShopStore } from '../stores/shop';
+import { useAuthStore } from '../stores/auth';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -7,7 +9,10 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomeView
+      component: HomeView,
+      meta: {
+        requiresFetchAllShops: true
+      }
     },
     {
       path: '/register',
@@ -30,6 +35,13 @@ const router = createRouter({
       component: () => import('../views/LogoutView.vue')
     }
   ]
+});
+
+router.beforeEach(async (to, from) => {
+  const authStore = useAuthStore();
+  const shopStore = useShopStore();
+
+  if (to.meta.requiresFetchAllShops) await shopStore.fetchAllShops();
 });
 
 export default router;

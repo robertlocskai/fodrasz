@@ -1,6 +1,7 @@
 import Joi from 'joi';
 import { tlds } from '@hapi/tlds';
 
+// signup schema
 const signup = Joi.object({
   firstname: Joi.string().min(5).max(20).required(),
   lastname: Joi.string().min(5).max(20).required(),
@@ -14,7 +15,7 @@ const signup = Joi.object({
   confirmPassword: Joi.any().equal(Joi.ref('password')).required().label('Confirm password')
 });
 
-// login
+// login schema
 const login = Joi.object({
   email: Joi.string()
     .email({ tlds: { allow: tlds } })

@@ -37,7 +37,7 @@ export const useAuthStore = defineStore('auth', () => {
       });
 
       if (!data.user)
-        throw new Error('Valami hiba történt a hitelesítés közben. Kérlek próbáld meg újra!');
+        throw new Error('Ismeretlen hiba történt a hitelesítés közben. Kérlek próbáld meg újra!');
 
       barber.value = data.user;
     } catch (err) {
@@ -50,7 +50,7 @@ export const useAuthStore = defineStore('auth', () => {
       const { data } = await axios.post(`${API_URI}/auth/signup`, user);
 
       if (!data.token)
-        throw new Error('Valami hiba történt a regisztráció közben. Kérlek próbáld újra!');
+        throw new Error('Ismeretlen hiba történt a regisztráció közben. Kérlek próbáld újra!');
 
       token.value = data.token;
 
@@ -62,7 +62,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   async function login(user) {
     try {
-      const { data } = await axios.post(`${API_URI}/api/auth/login`, user);
+      const { data } = await axios.post(`${API_URI}/auth/login`, user);
       if (!data.token)
         throw new Error('Valami hiba történt a regisztráció közben. Kérlek próbáld újra!');
 

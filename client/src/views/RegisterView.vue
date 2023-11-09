@@ -1,10 +1,10 @@
 <script setup>
 // import
 import { ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRouter, RouterLink } from 'vue-router';
+import { storeToRefs } from 'pinia';
 import { useAuthStore } from '../stores/auth';
 import * as schemas from '../schemas/schemas.auth';
-import { storeToRefs } from 'pinia';
 
 // store
 const authStore = useAuthStore();
@@ -41,11 +41,13 @@ async function handleSubmit() {
       <div class="col-lg-6 col-md-12">
         <div class="panel">
           <h3 class="text-center">Regisztráció</h3>
+
           <form @submit.prevent="handleSubmit">
             <div class="row">
               <div class="col-6">Vezetéknév</div>
               <div class="col-6">Keresztnév</div>
             </div>
+
             <div class="row">
               <div class="col-6">
                 <input
@@ -57,6 +59,7 @@ async function handleSubmit() {
                   id="vezeteknev"
                 />
               </div>
+
               <div class="col-6">
                 <input
                   v-model="barber.lastname"
@@ -68,9 +71,11 @@ async function handleSubmit() {
                 />
               </div>
             </div>
+
             <div class="row">
               <div class="col-12">E-mail</div>
             </div>
+
             <div class="row">
               <div class="col-12">
                 <input
@@ -83,9 +88,11 @@ async function handleSubmit() {
                 />
               </div>
             </div>
+
             <div class="row">
               <div class="col-12">Jelszó</div>
             </div>
+
             <div class="row">
               <div class="col-12">
                 <input
@@ -98,9 +105,11 @@ async function handleSubmit() {
                 />
               </div>
             </div>
+
             <div class="row">
               <div class="col-12">Jelszó mégegyszer</div>
             </div>
+
             <div class="row">
               <div class="col-12">
                 <input
@@ -113,14 +122,18 @@ async function handleSubmit() {
                 />
               </div>
             </div>
+
             <div class="row justify-content-center">
               <div class="col-12 d-flex justify-content-center">
                 <button type="submit" class="btn btn-primary mt-3 mb-3">Regisztráció</button>
               </div>
             </div>
+
             <div class="row">
               <div class="logintext col-12 d-flex justify-content-center">
-                Van már profilod?&nbsp;<a href="#">Jelentkezz be!</a>
+                Van már profilod?&nbsp;<RouterLink :to="{ name: 'login' }"
+                  >Jelentkezz be!</RouterLink
+                >
               </div>
             </div>
           </form>

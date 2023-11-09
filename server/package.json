@@ -39,7 +39,9 @@
     "joi": "^17.11.0",
     "jsonwebtoken": "^9.0.2",
     "monk": "^7.3.4",
+    "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.9.7",
+    "uuid": "^9.0.1",
     "volleyball": "^1.5.1"
   }
 }
