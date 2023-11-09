@@ -1,7 +1,7 @@
 <script setup></script>
 
 <template>
-  <div>Login View</div>
+  <div>Profile View</div>
 </template>
 
 <style scoped></style>

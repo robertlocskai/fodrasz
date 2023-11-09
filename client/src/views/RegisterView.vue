@@ -1,10 +1,47 @@
+<script setup>
+// import
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { useAuthStore } from '../stores/auth';
+import * as schemas from '../schemas/schemas.auth';
+import { storeToRefs } from 'pinia';
+
+// store
+const authStore = useAuthStore();
+const { isLoggedIn } = storeToRefs(authStore);
+
+// router
+const router = useRouter();
+
+// state
+const barber = ref({
+  firstname: '',
+  lastname: '',
+  email: '',
+  password: '',
+  confirmPassword: ''
+});
+
+// functions
+async function handleSubmit() {
+  try {
+    await schemas.signup.validateAsync(barber.value);
+    await authStore.signup(barber.value);
+
+    if (isLoggedIn.value) router.push({ name: 'home' });
+  } catch (err) {
+    console.error({ err });
+  }
+}
+</script>
+
 <template>
   <div class="container">
     <div class="row justify-content-center">
       <div class="col-lg-6 col-md-12">
         <div class="panel">
-          <center><h3>Regisztráció</h3></center>
-          <form>
+          <h3 class="text-center">Regisztráció</h3>
+          <form @submit.prevent="handleSubmit">
             <div class="row">
               <div class="col-6">Vezetéknév</div>
               <div class="col-6">Keresztnév</div>
@@ -12,6 +49,7 @@
             <div class="row">
               <div class="col-6">
                 <input
+                  v-model="barber.firstname"
                   type="text"
                   class="form-control"
                   placeholder="Vezetéknév..."
@@ -21,6 +59,7 @@
               </div>
               <div class="col-6">
                 <input
+                  v-model="barber.lastname"
                   type="text"
                   class="form-control"
                   placeholder="Keresztnév..."
@@ -35,6 +74,7 @@
             <div class="row">
               <div class="col-12">
                 <input
+                  v-model="barber.email"
                   type="email"
                   class="form-control"
                   placeholder="E-mail..."
@@ -49,6 +89,7 @@
             <div class="row">
               <div class="col-12">
                 <input
+                  v-model="barber.password"
                   type="password"
                   class="form-control"
                   placeholder="********"
@@ -63,6 +104,7 @@
             <div class="row">
               <div class="col-12">
                 <input
+                  v-model="barber.confirmPassword"
                   type="password"
                   class="form-control"
                   placeholder="********"

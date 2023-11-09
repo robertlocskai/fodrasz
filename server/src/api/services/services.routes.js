@@ -17,7 +17,7 @@ router.post(
   '/create',
   authMiddlewares.isLoggedIn,
   middlewares.validateSchema(schemas.upload),
-  controller.newService,
+  controller.createService,
 );
 
 // Szolgáltatás szerkesztése ID alapján

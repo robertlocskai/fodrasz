@@ -5,10 +5,11 @@ const barbers = require('./auth.model');
 /**
  * * A kapott felhasználói adatokat beleteszi egy tokenbe és azt elküldi a felhasználónak
  * @param {Object} user
- * @param {String} user._id - A barber id-ja
- * @param {String} user.name - A barber neve
- * @param {String} user.email - A barber email címek
- * @param {String} user.password - A barber jelszava
+ * @param {String} user._id - A fodrász id-ja
+ * @param {String} user.firstname - A fodrász vezetékneve
+ * @param {String} user.lastname - A fodrász keresztneve
+ * @param {String} user.email - A fodrász email címek
+ * @param {String} user.password - A fodrász jelszava
  * @param {import('express').Response} res
  * @param {import('express').NextFunction} next
  */
@@ -87,7 +88,7 @@ const refreshToken = async (req, res, next) => {
 const signup = async (req, res, next) => {
   try {
     const {
-      body: { name, email, password },
+      body: { firstname, lastname, email, password },
     } = req;
 
     // felhasználó kikeresése az adatbázisból {email} alapján
@@ -106,7 +107,8 @@ const signup = async (req, res, next) => {
 
     // feltöltendő adatok megadása
     const newUserPayload = {
-      name,
+      firstname,
+      lastname,
       email,
       password: hashedPassword,
     };

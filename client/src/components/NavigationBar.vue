@@ -1,7 +1,18 @@
+<script setup>
+import { storeToRefs } from 'pinia';
+import { useAuthStore } from '../stores/auth';
+import { RouterLink } from 'vue-router';
+
+// store
+const authStore = useAuthStore();
+const { isLoggedIn, barberName } = storeToRefs(authStore);
+</script>
+
 <template>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container">
       <a class="navbar-brand" href="/">FodraszPont</a>
+
       <button
         class="navbar-toggler"
         type="button"
@@ -13,6 +24,7 @@
       >
         <span class="navbar-toggler-icon"></span>
       </button>
+
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto my-3 my-lg-0"></ul>
         <form class="d-flex">
@@ -24,22 +36,36 @@
           />
           <i class="bi bi-search"></i>
         </form>
+
         <div class="divider me-3"></div>
-        <router-link to="/login" custom v-slot="{ navigate }">
+
+        <RouterLink v-if="!isLoggedIn" to="/login" custom v-slot="{ navigate }">
           <button class="btn btn-outline-primary me-3" type="submit" @click="navigate" role="link">
             Bejelentkezés
           </button>
-        </router-link>
-        <router-link to="/register" custom v-slot="{ navigate }">
+        </RouterLink>
+
+        <RouterLink v-if="!isLoggedIn" to="/register" custom v-slot="{ navigate }">
           <button class="btn btn-primary me-3" type="submit" @click="navigate" role="link">
             Regisztráció
           </button>
-        </router-link>
+        </RouterLink>
+
+        <RouterLink v-if="isLoggedIn" to="/profile" custom v-slot="{ navigate }">
+          <button class="btn btn-primary me-3" type="submit" @click="navigate" role="link">
+            {{ barberName }}
+          </button>
+        </RouterLink>
+
+        <RouterLink v-if="isLoggedIn" to="/logout" custom v-slot="{ navigate }">
+          <button class="btn btn-primary me-3" type="submit" @click="navigate" role="link">
+            Logout
+          </button>
+        </RouterLink>
       </div>
     </div>
   </nav>
 </template>
-<script setup></script>
 <style scoped>
 .navbar {
   left: 0;

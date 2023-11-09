@@ -2,11 +2,8 @@ const Joi = require('joi');
 
 // signup
 const signup = Joi.object({
-  name: Joi.string()
-    .pattern(/^[\w\-\s]+$/)
-    .min(5)
-    .max(32)
-    .required(),
+  firstname: Joi.string().min(5).max(20).required(),
+  lastname: Joi.string().min(5).max(20).required(),
 
   email: Joi.string().email().required(),
 
