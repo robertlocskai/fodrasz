@@ -32,7 +32,7 @@ async function handleSubmit() {
 
 <template>
   <div class="container">
-    <div class="row justify-content-center">
+    <div class="row justify-content-center" id="top">
       <div class="col-lg-6 col-md-12">
         <div class="panel">
           <h3 class="text-center">Bejelentkezés</h3>
@@ -97,6 +97,7 @@ async function handleSubmit() {
   padding: 3rem 4rem;
   background-color: white;
   border-radius: 9px;
+  margin-top: 10rem;
 }
 
 .logintext,
@@ -106,6 +107,9 @@ async function handleSubmit() {
 
 .row {
   margin-top: 0.5rem;
+}
+.row#top {
+  margin-top: 0;
 }
 
 h3 {

@@ -68,11 +68,13 @@ const { isLoggedIn, barberName } = storeToRefs(authStore);
 </template>
 <style scoped>
 .navbar {
+  z-index: 1;
   left: 0;
   right: 0;
   background-color: white !important;
   border-radius: 6px;
   margin: 2rem;
+  position: absolute;
 }
 .navbar-brand,
 .navbar-brand:hover,
@@ -96,13 +98,17 @@ const { isLoggedIn, barberName } = storeToRefs(authStore);
 }
 
 .bi-search {
-  align-self: center;
   transform: translateX(-2.7rem);
+  align-self: center;
   color: #3f3f3f;
 }
 .bi-search:hover {
   color: #dd5656;
   cursor: pointer;
+}
+
+form {
+  margin-right: -1rem;
 }
 
 /* clears the ‘X’ from Internet Explorer */

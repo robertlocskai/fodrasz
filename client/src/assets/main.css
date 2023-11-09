@@ -12,6 +12,12 @@ body {
   font-size: 16px;
 }
 
+h4 {
+  color: #1e1e1e;
+  font-size: 18px;
+  font-weight: 700;
+}
+
 /*BUTTONS*/
 .btn-primary {
   color: white;

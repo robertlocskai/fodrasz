@@ -37,7 +37,7 @@ async function handleSubmit() {
 
 <template>
   <div class="container">
-    <div class="row justify-content-center">
+    <div class="row justify-content-center" id="top">
       <div class="col-lg-6 col-md-12">
         <div class="panel">
           <h3 class="text-center">Regisztráció</h3>
@@ -145,6 +145,7 @@ async function handleSubmit() {
 
 <style scoped>
 .panel {
+  margin-top: 10rem;
   width: auto;
   padding: 3rem 4rem;
   background-color: white;
@@ -158,6 +159,9 @@ async function handleSubmit() {
 
 .row {
   margin-top: 0.5rem;
+}
+.row#top {
+  margin-top: 0;
 }
 
 h3 {
