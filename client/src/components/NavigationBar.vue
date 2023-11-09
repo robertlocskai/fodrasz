@@ -123,4 +123,10 @@ input[type='search']::-webkit-search-results-button,
 input[type='search']::-webkit-search-results-decoration {
   display: none;
 }
+
+@media (max-width: 575px) {
+  .navbar {
+    margin: 0.8rem;
+  }
+}
 </style>
