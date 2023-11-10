@@ -71,9 +71,11 @@ span.colorized {
 }
 
 .container {
+  position: absolute;
+  left: 50%;
   padding: 1rem 1rem 5rem 1rem;
   background-color: white;
-  transform: translateY(-30rem);
+  transform: translateY(-30rem) translateX(-50%);
   border-radius: 9px;
 }
 
