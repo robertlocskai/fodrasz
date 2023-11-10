@@ -52,14 +52,14 @@ const { isLoggedIn, barberName } = storeToRefs(authStore);
         </RouterLink>
 
         <RouterLink v-if="isLoggedIn" to="/profile" custom v-slot="{ navigate }">
-          <button class="btn btn-primary me-3" type="submit" @click="navigate" role="link">
-            {{ barberName }}
-          </button>
+          <!--<button class="btn btn-primary me-3" type="submit" @click="navigate" role="link">-->
+          <a @click="navigate" class="profileLink me-3">{{ barberName }}</a>
+          <!--</button>-->
         </RouterLink>
 
         <RouterLink v-if="isLoggedIn" to="/logout" custom v-slot="{ navigate }">
           <button class="btn btn-primary me-3" type="submit" @click="navigate" role="link">
-            Logout
+            <i class="bi bi-box-arrow-right"></i>
           </button>
         </RouterLink>
       </div>
@@ -67,6 +67,13 @@ const { isLoggedIn, barberName } = storeToRefs(authStore);
   </nav>
 </template>
 <style scoped>
+.profileLink {
+  text-decoration: none;
+}
+.profileLink:hover {
+  cursor: pointer;
+}
+
 .navbar {
   z-index: 1;
   left: 0;
