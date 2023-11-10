@@ -36,18 +36,18 @@ export const useShopStore = defineStore('shop', () => {
 
   async function fetchUserShops() {
     try {
-      const { data } = await axios.get(`${API_URI}/shop/logged-in/`, {
+      const { userShops } = await axios.get(`${API_URI}/shop/logged-in/`, {
         headers: {
           Authorization: bearerToken.value
         }
       });
 
-      if (!data.shopList)
+      if (!userShops.value)
         throw new Error(
           'Ismeretlen hiba történt a fodrászatok lekérdezése közben. Kérlek próbáld újra!'
         );
 
-      userShops.value = data.shopList;
+      localUserShops.value = userShops.value;
     } catch (err) {
       console.error({ err });
     }

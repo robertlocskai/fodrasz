@@ -9,10 +9,7 @@ const authStore = useAuthStore();
 const { isLoggedIn, barberName } = storeToRefs(authStore);
 const shopStore = useShopStore();
 const { userShops } = storeToRefs(shopStore);
-
-console.log(userShops.value.length);
-let shopNum = userShops.value.length;
-
+const shopNum = userShops.value.length;
 const newShop = ref({
   name: '',
   location: '',
@@ -24,8 +21,6 @@ async function handleSubmit() {
   try {
     //TODO: SCHEMA VALIDATION
     await shopStore.createShop(newShop.value);
-
-    if (shopNum > 0) router.push({ name: 'profile' });
   } catch (err) {
     console.error({ err });
   }

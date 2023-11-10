@@ -27,7 +27,10 @@ const router = createRouter({
     {
       path: '/profile',
       name: 'profile',
-      component: () => import('../views/ProfileView.vue')
+      component: () => import('../views/ProfileView.vue'),
+      meta: {
+        requiresFetchUserShops: true
+      }
     },
     {
       path: '/logout',
@@ -42,6 +45,7 @@ router.beforeEach(async (to, from) => {
   const shopStore = useShopStore();
 
   if (to.meta.requiresFetchAllShops) await shopStore.fetchAllShops();
+  if (to.meta.requiresFetchUserShops) await shopStore.fetchUserShops();
 });
 
 export default router;
