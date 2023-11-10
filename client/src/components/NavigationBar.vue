@@ -44,24 +44,53 @@ const { isLoggedIn, barberName } = storeToRefs(authStore);
             Bejelentkezés
           </button>
         </RouterLink>
-
+        <br id="mobile" />
         <RouterLink v-if="!isLoggedIn" to="/register" custom v-slot="{ navigate }">
           <button class="btn btn-primary me-3" type="submit" @click="navigate" role="link">
             Regisztráció
           </button>
         </RouterLink>
 
-        <RouterLink v-if="isLoggedIn" to="/profile" custom v-slot="{ navigate }">
-          <!--<button class="btn btn-primary me-3" type="submit" @click="navigate" role="link">-->
+        <ul class="navbar-nav me-3" v-if="isLoggedIn">
+          <li class="nav-item dropdown">
+            <a
+              class="nav-link dropdown-toggle"
+              href="#"
+              id="navbarDropdownMenuLink"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+              style="color: #e46f6f"
+            >
+              {{ barberName }}
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <li>
+                <RouterLink v-if="isLoggedIn" to="/profile" custom v-slot="{ navigate }">
+                  <a class="dropdown-item" href="#" @click="navigate"
+                    ><i class="bi bi-person-fill"></i> Profil megtekintése</a
+                  ></RouterLink
+                >
+              </li>
+              <li>
+                <a class="dropdown-item" href="#"
+                  ><i class="bi bi-gear-fill"></i> Profil beállítások</a
+                >
+              </li>
+              <hr />
+              <li>
+                <RouterLink v-if="isLoggedIn" to="/logout" custom v-slot="{ navigate }">
+                  <a class="dropdown-item" style="color: #e46f6f" href="#" @click="navigate"
+                    ><i class="bi bi-box-arrow-right"></i> Kijelentkezés</a
+                  >
+                </RouterLink>
+              </li>
+            </ul>
+          </li>
+        </ul>
+        <!--<RouterLink v-if="isLoggedIn" to="/profile" custom v-slot="{ navigate }">
           <a @click="navigate" class="profileLink me-3">{{ barberName }}</a>
-          <!--</button>-->
-        </RouterLink>
-
-        <RouterLink v-if="isLoggedIn" to="/logout" custom v-slot="{ navigate }">
-          <button class="btn btn-primary me-3" type="submit" @click="navigate" role="link">
-            <i class="bi bi-box-arrow-right"></i>
-          </button>
-        </RouterLink>
+        </RouterLink>-->
       </div>
     </div>
   </nav>
@@ -135,6 +164,27 @@ input[type='search']::-webkit-search-cancel-button,
 input[type='search']::-webkit-search-results-button,
 input[type='search']::-webkit-search-results-decoration {
   display: none;
+}
+
+br#mobile {
+  display: none;
+}
+
+@media (max-width: 991px) {
+  br#mobile {
+    display: block;
+  }
+  .divider {
+    display: none;
+  }
+  .form-control.me-3 {
+    margin-right: 0 !important;
+  }
+
+  .btn {
+    margin-top: 0.5rem;
+    width: 100%;
+  }
 }
 
 @media (max-width: 575px) {
