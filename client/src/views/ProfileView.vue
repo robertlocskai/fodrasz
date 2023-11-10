@@ -1,10 +1,35 @@
 <script setup>
+import { ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useAuthStore } from '../stores/auth';
+import { useShopStore } from '../stores/shop';
 
 // store
 const authStore = useAuthStore();
 const { isLoggedIn, barberName } = storeToRefs(authStore);
+const shopStore = useShopStore();
+const { userShops } = storeToRefs(shopStore);
+
+console.log(userShops.value.length);
+let shopNum = userShops.value.length;
+
+const newShop = ref({
+  name: '',
+  location: '',
+  phone: ''
+});
+
+// functions
+async function handleSubmit() {
+  try {
+    //TODO: SCHEMA VALIDATION
+    await shopStore.createShop(newShop.value);
+
+    if (shopNum > 0) router.push({ name: 'profile' });
+  } catch (err) {
+    console.error({ err });
+  }
+}
 </script>
 
 <template>
@@ -18,11 +43,73 @@ const { isLoggedIn, barberName } = storeToRefs(authStore);
         <img src="https://pbs.twimg.com/media/FUrhqfUXoAIQS3Q.png" alt="profilePic" />
         {{ barberName }}
       </div>
-      <div class="noStore">
+      <div class="noStore" v-if="shopNum == 0">
         Még nincs fodrászat létrehozva a fiókodban! Hozz létre egyet!
-        <button class="btn btn-primary">
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
           <i class="bi bi-plus"></i>
         </button>
+      </div>
+    </div>
+  </div>
+  <div
+    class="modal fade"
+    id="exampleModal"
+    tabindex="-1"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Fodrászat létrehozása</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <form id="createForm" @submit.prevent="handleSubmit">
+            <div class="row">Fodrászat neve:</div>
+            <div class="row">
+              <input
+                v-model="newShop.name"
+                class="form-control"
+                type="text"
+                name="shopName"
+                id="shopName"
+                placeholder="Név..."
+              />
+            </div>
+            <div class="row">Fodrászat címe:</div>
+            <div class="row">
+              <input
+                v-model="newShop.location"
+                class="form-control"
+                type="text"
+                name="location"
+                id="location"
+                placeholder="Cím..."
+              />
+            </div>
+            <div class="row">Telefonszám:</div>
+            <div class="row">
+              <input
+                v-model="newShop.phone"
+                class="form-control"
+                type="tel"
+                name="phone"
+                id="phone"
+                placeholder="Telefonszám..."
+              />
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Mégsem</button>
+          <button type="submit" form="createForm" class="btn btn-primary">Létrehozás</button>
+        </div>
       </div>
     </div>
   </div>
@@ -101,5 +188,13 @@ const { isLoggedIn, barberName } = storeToRefs(authStore);
 
 .btn i {
   font-size: 2rem;
+}
+
+.modal-body {
+  margin: 2rem;
+}
+
+.modal-body .row {
+  margin-bottom: 0.4rem;
 }
 </style>

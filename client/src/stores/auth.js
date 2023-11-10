@@ -20,6 +20,7 @@ export const useAuthStore = defineStore('auth', () => {
   const hasToken = computed(() => !!token.value);
   const isLoggedIn = computed(() => !!barber.value._id);
   const bearerToken = computed(() => `Bearer ${token.value}`);
+  const barberId = computed(() => barber._id);
 
   const API_URI = 'http://localhost:3000/api';
 
@@ -92,5 +93,16 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   // return
-  return { barber, token, barberName, hasToken, isLoggedIn, setUserByToken, signup, login, $reset };
+  return {
+    barber,
+    token,
+    barberName,
+    hasToken,
+    isLoggedIn,
+    barberId,
+    setUserByToken,
+    signup,
+    login,
+    $reset
+  };
 });
