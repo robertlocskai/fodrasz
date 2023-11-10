@@ -9,7 +9,6 @@ const authStore = useAuthStore();
 const { isLoggedIn, barberName } = storeToRefs(authStore);
 const shopStore = useShopStore();
 const { userShops } = storeToRefs(shopStore);
-const shopNum = userShops.value.length;
 const newShop = ref({
   name: '',
   location: '',
@@ -38,11 +37,16 @@ async function handleSubmit() {
         <img src="https://pbs.twimg.com/media/FUrhqfUXoAIQS3Q.png" alt="profilePic" />
         {{ barberName }}
       </div>
-      <div class="noStore" v-if="shopNum == 0">
+      <div class="noStore" v-if="userShops.length == 0">
         Még nincs fodrászat létrehozva a fiókodban! Hozz létre egyet!
         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
           <i class="bi bi-plus"></i>
         </button>
+      </div>
+      <div class="shops" v-if="userShops.length > 0">
+        <div class="row justify-content-center">
+          <div class="card" v-for="shop in userShops"></div>
+        </div>
       </div>
     </div>
   </div>
