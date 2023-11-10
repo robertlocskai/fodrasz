@@ -3,6 +3,7 @@ import { ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useAuthStore } from '../stores/auth';
 import { useShopStore } from '../stores/shop';
+import UserShopCard from '../components/UserShopCard.vue';
 
 // store
 const authStore = useAuthStore();
@@ -43,9 +44,10 @@ async function handleSubmit() {
           <i class="bi bi-plus"></i>
         </button>
       </div>
-      <div class="shops" v-if="userShops.length > 0">
+      <div class="shops mt-4" v-if="userShops.length > 0">
+        <h4 class="mb-4">Általad létrehozott fodrászatok</h4>
         <div class="row justify-content-center">
-          <div class="card" v-for="shop in userShops"></div>
+          <UserShopCard v-for="shop in userShops" :shopData="shop" />
         </div>
       </div>
     </div>
