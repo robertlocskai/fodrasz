@@ -100,6 +100,7 @@ export const useAuthStore = defineStore('auth', () => {
     hasToken,
     isLoggedIn,
     barberId,
+    bearerToken,
     setUserByToken,
     signup,
     login,

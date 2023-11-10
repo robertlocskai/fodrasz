@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+import { storeToRefs } from 'pinia';
 import { useAuthStore } from './auth';
 import { ref, computed } from 'vue';
 import axios from 'axios';
@@ -10,7 +11,7 @@ export const useShopStore = defineStore('shop', () => {
 
   //stores
   const authStore = useAuthStore();
-  const { bearerToken } = authStore;
+  const { bearerToken } = storeToRefs(authStore);
 
   // getters
 
@@ -54,13 +55,14 @@ export const useShopStore = defineStore('shop', () => {
 
   async function createShop(shop) {
     try {
+      console.log(shop);
       const { data } = await axios.post(`${API_URI}/shop/create`, shop, {
         headers: {
           Authorization: bearerToken.value
         }
       });
 
-      if (!data)
+      if (!data.newShop)
         throw new Error('Ismeretlen hiba történt a regisztráció közben. Kérlek próbáld újra!');
 
       await fetchUserShops();

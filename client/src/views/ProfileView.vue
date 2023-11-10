@@ -108,7 +108,9 @@ async function handleSubmit() {
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Mégsem</button>
-          <button type="submit" form="createForm" class="btn btn-primary">Létrehozás</button>
+          <button type="submit" form="createForm" class="btn btn-primary" data-bs-dismiss="modal">
+            Létrehozás
+          </button>
         </div>
       </div>
     </div>
