@@ -62,6 +62,7 @@ console.log(deleteModal);*/
     <div class="fadeOut"></div>
   </div>
   <div class="container">
+    <div class="profileThumbnail"></div>
     <div class="content">
       <div class="profileHeader">
         <img src="https://pbs.twimg.com/media/FUrhqfUXoAIQS3Q.png" alt="profilePic" />
@@ -265,6 +266,17 @@ console.log(deleteModal);*/
 
 .modal-body .row {
   margin-bottom: 0.4rem;
+}
+
+.profileThumbnail {
+  z-index: -1;
+  margin: -1rem -1rem -5rem -1rem;
+  border-radius: 9px 9px 0px 0px;
+  position: absolute;
+  width: 100%;
+  height: 10rem;
+  background: rgb(144, 144, 144);
+  background: linear-gradient(45deg, rgba(144, 144, 144, 1) 0%, rgba(223, 223, 223, 1) 100%);
 }
 
 @media (max-width: 454px) {
