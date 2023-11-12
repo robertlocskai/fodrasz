@@ -185,6 +185,10 @@ br#mobile {
     margin-top: 0.5rem;
     width: 100%;
   }
+
+  ul.navbar-nav {
+    width: 100%;
+  }
 }
 
 @media (max-width: 575px) {
