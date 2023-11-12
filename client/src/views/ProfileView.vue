@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useAuthStore } from '../stores/auth';
 import { useShopStore } from '../stores/shop';
@@ -25,6 +25,35 @@ async function handleSubmit() {
     console.error({ err });
   }
 }
+let removeId = '';
+
+onMounted(() => {
+  const exampleModal = document.getElementById('exampleModal2');
+  console.log(exampleModal);
+
+  exampleModal.addEventListener('show.bs.modal', (event) => {
+    // Button that triggered the modal
+    const button = event.relatedTarget;
+    // Extract info from data-bs-* attributes
+    const shop = button.getAttribute('data-bs-id');
+    // If necessary, you could initiate an AJAX request here
+    // and then do the updating in a callback.
+
+    removeId = shop;
+  });
+});
+
+async function handleRemove() {
+  try {
+    await shopStore.deleteShop(removeId);
+  } catch (err) {
+    console.error({ err });
+  }
+}
+/*const deleteModal = this.$refs.deleteModal;
+console.log(deleteModal);*/
+
+/**/
 </script>
 
 <template>
@@ -46,8 +75,44 @@ async function handleSubmit() {
       </div>
       <div class="shops mt-4" v-if="userShops.length > 0">
         <h4 class="mb-4">Általad létrehozott fodrászatok</h4>
-        <div class="row justify-content-center">
+        <div class="row">
           <UserShopCard v-for="shop in userShops" :shopData="shop" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--remove modal-->
+  <div
+    class="modal fade"
+    id="exampleModal2"
+    tabindex="-1"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+    ref="deleteModal"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Fodrászat törlése</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">Biztosan el szeretnéd távolítani ezt a fodrászatot?</div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Mégsem</button>
+          <button
+            type="button"
+            @click="handleRemove()"
+            class="btn btn-primary"
+            data-bs-dismiss="modal"
+          >
+            Törlés
+          </button>
         </div>
       </div>
     </div>
@@ -166,6 +231,7 @@ async function handleSubmit() {
   align-items: center;
   font-size: 40px;
   font-weight: bold;
+  margin-top: -5rem;
 }
 
 .profileHeader img {
@@ -199,5 +265,28 @@ async function handleSubmit() {
 
 .modal-body .row {
   margin-bottom: 0.4rem;
+}
+
+@media (max-width: 454px) {
+  .content {
+    margin: 1rem;
+  }
+  .profileHeader {
+    font-size: 28px;
+    text-align: center;
+    margin-top: -3rem;
+  }
+  h4 {
+    font-size: 16px;
+    text-align: center;
+  }
+  .profileHeader img {
+    height: 10rem;
+  }
+}
+@media (max-width: 390px) {
+  .content {
+    margin: 0.2rem;
+  }
 }
 </style>
