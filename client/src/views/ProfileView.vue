@@ -3,6 +3,7 @@ import { ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useAuthStore } from '../stores/auth';
 import { useShopStore } from '../stores/shop';
+import { RouterLink } from 'vue-router';
 
 // store
 const authStore = useAuthStore();
@@ -32,6 +33,7 @@ async function handleSubmit() {
     <div class="cover"></div>
     <div class="fadeOut"></div>
   </div>
+
   <div class="container">
     <div class="content">
       <div class="profileHeader">
@@ -40,12 +42,19 @@ async function handleSubmit() {
       </div>
       <div class="noStore" v-if="shopNum == 0">
         Még nincs fodrászat létrehozva a fiókodban! Hozz létre egyet!
-        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-          <i class="bi bi-plus"></i>
-        </button>
+        <RouterLink :to="{ name: 'createShop' }">
+          <button class="btn btn-primary">
+            <i class="bi bi-plus"></i>
+          </button>
+        </RouterLink>
       </div>
     </div>
   </div>
+
+  <!-- <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    <i class="bi bi-plus"></i>
+  </button> -->
+
   <div
     class="modal fade"
     id="exampleModal"

@@ -9,11 +9,11 @@ const router = express.Router();
 // Get all shops
 router.get('/', controller.getAll);
 
-// Get one barber shop data by id
-router.get('/:id', controller.getById);
-
 // Get logged in user's barber shops
 router.get('/logged-in', authMiddlewares.isLoggedIn, controller.getByJWT);
+
+// Get one barber shop data by id
+router.get('/:id', controller.getById);
 
 // Create a new barber shop
 router.post(

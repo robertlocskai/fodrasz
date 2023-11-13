@@ -11,7 +11,7 @@ const router = express.Router();
 router.get('/validate', controller.validateJWT);
 
 // ha a felhasználó tokenje le fog járni, itt kérhet újat (bejelentkezés nélkül)
-router.get('/refresh', controller.refreshToken);
+router.get('/refresh', middlewares.isLoggedIn, controller.refreshToken);
 
 // itt tudnak a fordrászok regisztrálni
 router.post(

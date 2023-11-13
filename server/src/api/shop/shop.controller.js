@@ -22,6 +22,26 @@ const getAll = async (req, res, next) => {
 };
 
 /**
+ * * Lekérdezi a bejelentkezett felhasználó fordászatait
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @param {import('express').NextFunction} next
+ */
+const getByJWT = async (req, res, next) => {
+  try {
+    const {
+      user: { _id: userId },
+    } = req;
+
+    const userShops = await shops.find({ ownerId: userId });
+
+    res.json({ userShops });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
  * * Lekérdez egy fodrászatot az id-ja alapján
  * @param {import('express').Request} req
  * @param {import('express').Response} res
@@ -43,26 +63,6 @@ const getById = async (req, res, next) => {
     res.json({ shop });
   } catch (err) {
     next(err);
-  }
-};
-
-/**
- * * Lekérdezi a bejelentkezett felhasználó fordászatait
- * @param {import('express').Request} req
- * @param {import('express').Response} res
- * @param {import('express').NextFunction} next
- */
-const getByJWT = async (req, res, next) => {
-  try {
-    const {
-      user: { _id: userId },
-    } = req;
-
-    const userShops = await shops.find({ ownerId: userId });
-
-    res.json({ userShops });
-  } catch (error) {
-    next(error);
   }
 };
 
@@ -156,8 +156,8 @@ const deleteShop = async (req, res, next) => {
 // exportálás
 module.exports = {
   getAll,
-  getById,
   getByJWT,
+  getById,
   createShop,
   updateShop,
   deleteShop,
