@@ -36,18 +36,20 @@ export const useShopStore = defineStore('shop', () => {
 
   async function fetchUserShops() {
     try {
-      const { data } = await axios.get(`${API_URI}/shop/logged-in/`, {
+      const {
+        data: { userShops: userShopsReq }
+      } = await axios.get(`${API_URI}/shop/logged-in/`, {
         headers: {
           Authorization: bearerToken.value
         }
       });
 
-      if (!data.userShops)
+      if (!userShopsReq)
         throw new Error(
           'Ismeretlen hiba történt a fodrászatok lekérdezése közben. Kérlek próbáld újra!'
         );
 
-      userShops.value = data.userShops;
+      userShops.value = userShopsReq;
     } catch (err) {
       console.error({ err });
     }
@@ -55,7 +57,6 @@ export const useShopStore = defineStore('shop', () => {
 
   async function createShop(shop) {
     try {
-      console.log(shop);
       const { data } = await axios.post(`${API_URI}/shop/create`, shop, {
         headers: {
           Authorization: bearerToken.value
@@ -63,7 +64,7 @@ export const useShopStore = defineStore('shop', () => {
       });
 
       if (!data.newShop)
-        throw new Error('Ismeretlen hiba történt a regisztráció közben. Kérlek próbáld újra!');
+        throw new Error('Ismeretlen hiba történt a létrehozás közben. Kérlek próbáld újra!');
 
       await fetchUserShops();
     } catch (err) {
@@ -71,6 +72,23 @@ export const useShopStore = defineStore('shop', () => {
     }
   }
 
+  async function deleteShop(id) {
+    try {
+      const result = await axios.delete(`${API_URI}/shop/delete/${id}`, {
+        headers: {
+          Authorization: bearerToken.value
+        }
+      });
+
+      if (!result)
+        throw new Error('Ismeretlen hiba történt törlés közben. Kérlek próbáld újra később!');
+
+      await fetchUserShops();
+    } catch (err) {
+      console.log({ err });
+    }
+  }
+
   // return
-  return { shops, userShops, fetchAllShops, fetchUserShops, createShop };
+  return { shops, userShops, fetchAllShops, fetchUserShops, createShop, deleteShop };
 });

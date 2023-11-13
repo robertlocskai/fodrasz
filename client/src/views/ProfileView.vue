@@ -1,16 +1,16 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useAuthStore } from '../stores/auth';
 import { useShopStore } from '../stores/shop';
-import { RouterLink } from 'vue-router';
+import UserShopCard from '../components/UserShopCard.vue';
+import router from '../router';
 
 // store
 const authStore = useAuthStore();
 const { isLoggedIn, barberName } = storeToRefs(authStore);
 const shopStore = useShopStore();
 const { userShops } = storeToRefs(shopStore);
-const shopNum = userShops.value.length;
 const newShop = ref({
   name: '',
   location: '',
@@ -26,6 +26,39 @@ async function handleSubmit() {
     console.error({ err });
   }
 }
+let removeId = '';
+
+onMounted(() => {
+  const exampleModal = document.getElementById('exampleModal2');
+
+  exampleModal.addEventListener('show.bs.modal', (event) => {
+    // Button that triggered the modal
+    const button = event.relatedTarget;
+    // Extract info from data-bs-* attributes
+    const shop = button.getAttribute('data-bs-id');
+    // If necessary, you could initiate an AJAX request here
+    // and then do the updating in a callback.
+
+    removeId = shop;
+  });
+});
+
+if (!isLoggedIn.value) {
+  router.push({ name: 'home' });
+  console.log('Nem vagy bejelentkezve!');
+}
+
+async function handleRemove() {
+  try {
+    await shopStore.deleteShop(removeId);
+  } catch (err) {
+    console.error({ err });
+  }
+}
+/*const deleteModal = this.$refs.deleteModal;
+console.log(deleteModal);*/
+
+/**/
 </script>
 
 <template>
@@ -35,18 +68,72 @@ async function handleSubmit() {
   </div>
 
   <div class="container">
+    <div class="profileThumbnail"></div>
     <div class="content">
       <div class="profileHeader">
         <img src="https://pbs.twimg.com/media/FUrhqfUXoAIQS3Q.png" alt="profilePic" />
         {{ barberName }}
       </div>
-      <div class="noStore" v-if="shopNum == 0">
+      <div class="noStore" v-if="userShops.length == 0">
         Még nincs fodrászat létrehozva a fiókodban! Hozz létre egyet!
         <RouterLink :to="{ name: 'createShop' }">
           <button class="btn btn-primary">
             <i class="bi bi-plus"></i>
           </button>
         </RouterLink>
+      </div>
+      <div class="shops mt-4" v-if="userShops.length > 0">
+        <h4 class="mb-4">Általad létrehozott fodrászatok ({{ userShops.length }}/4)</h4>
+        <div class="row">
+          <UserShopCard v-for="shop in userShops" :shopData="shop" />
+          <div class="addIfHas col-lg-3 col-md-6 col-sm-12 mt-3">
+            <button
+              v-if="userShops.length < 4"
+              id="addIfHas"
+              class="btn btn-primary"
+              data-bs-toggle="modal"
+              data-bs-target="#exampleModal"
+            >
+              <i class="bi bi-plus"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--remove modal-->
+  <div
+    class="modal fade"
+    id="exampleModal2"
+    tabindex="-1"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+    ref="deleteModal"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Fodrászat törlése</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">Biztosan el szeretnéd távolítani ezt a fodrászatot?</div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Mégsem</button>
+          <button
+            type="button"
+            @click="handleRemove()"
+            class="btn btn-primary"
+            data-bs-dismiss="modal"
+          >
+            Törlés
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -184,12 +271,28 @@ async function handleSubmit() {
   row-gap: 1.5rem;
   justify-content: center;
   align-items: center;
+  text-align: center;
 }
 
 .noStore .btn {
   width: 4rem;
   border-radius: 50%;
-  aspect-ratio: 1;
+  aspect-ratio: 1/1;
+}
+
+.addIfHas {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#addIfHas {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .btn i {
@@ -202,5 +305,38 @@ async function handleSubmit() {
 
 .modal-body .row {
   margin-bottom: 0.4rem;
+}
+
+.profileThumbnail {
+  z-index: -1;
+  margin: -1rem -1rem -5rem -1rem;
+  border-radius: 9px 9px 0px 0px;
+  position: absolute;
+  width: 100%;
+  height: 10rem;
+  background: rgb(144, 144, 144);
+  background: linear-gradient(45deg, rgba(144, 144, 144, 1) 0%, rgba(223, 223, 223, 1) 100%);
+}
+
+@media (max-width: 454px) {
+  .content {
+    margin: 1rem;
+  }
+  .profileHeader {
+    font-size: 28px;
+    text-align: center;
+  }
+  h4 {
+    font-size: 16px;
+    text-align: center;
+  }
+  .profileHeader img {
+    height: 10rem;
+  }
+}
+@media (max-width: 390px) {
+  .content {
+    margin: 0.2rem;
+  }
 }
 </style>
