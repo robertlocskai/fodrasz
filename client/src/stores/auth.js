@@ -20,7 +20,7 @@ export const useAuthStore = defineStore('auth', () => {
   const hasToken = computed(() => !!token.value);
   const isLoggedIn = computed(() => !!barber.value._id);
   const bearerToken = computed(() => `Bearer ${token.value}`);
-  const barberId = computed(() => barber._id);
+  const barberId = computed(() => barber.value._id);
 
   const API_URI = 'http://localhost:3000/api';
 

@@ -8,6 +8,7 @@ export const useShopStore = defineStore('shop', () => {
   // state
   const shops = ref([]);
   const userShops = ref([]);
+  const currentShop = ref([]);
 
   //stores
   const authStore = useAuthStore();
@@ -89,6 +90,32 @@ export const useShopStore = defineStore('shop', () => {
     }
   }
 
+  async function fetchUserShopById(id) {
+    try {
+      const {
+        data: { shop }
+      } = await axios.get(`${API_URI}/shop/${id}`);
+
+      if (!shop)
+        throw new Error(
+          'Ismeretlen hiba történt a fodrászat lekérése közben. Kérjük próbáld újra később%'
+        );
+
+      currentShop.value = shop;
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   // return
-  return { shops, userShops, fetchAllShops, fetchUserShops, createShop, deleteShop };
+  return {
+    shops,
+    userShops,
+    currentShop,
+    fetchAllShops,
+    fetchUserShops,
+    createShop,
+    deleteShop,
+    fetchUserShopById
+  };
 });

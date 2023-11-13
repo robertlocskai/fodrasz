@@ -4,21 +4,56 @@
     <div class="fadeOut"></div>
   </div>
   <div class="container">
-    <div class="shopThumbnail">Teszt shopppp</div>
+    <div class="shopThumbnail">{{ currentShop.name }}</div>
     <div class="content">
       <!--{{ $route.params.id }}-->
       <div class="row">
         <div class="services col-7">
+          <div class="row" v-for="service in shopServices">
+            <Service :serviceData="service" :canEdit="currentShop.ownerId == barberId" />
+          </div>
           <div class="row">
-            <Service />
+            <button class="btn btn-primary" v-if="currentShop.ownerId == barberId">
+              Új szolgáltatás hozzáadása
+            </button>
           </div>
         </div>
-        <div class="datas col-5"></div>
+        <div class="col-5">
+          <div class="dataPanel card text-center">
+            <div class="card-header">Fodrászat adatok</div>
+            <div class="card-body">
+              <h5 class="card-title">{{ currentShop.name }}</h5>
+              <div class="rating">
+                <img src="../assets/images/star.svg" alt="star" />
+                <img src="../assets/images/star.svg" alt="star" />
+                <img src="../assets/images/star.svg" alt="star" />
+                <img src="../assets/images/star.svg" alt="star" />
+                <img src="../assets/images/star.svg" alt="star" />
+                (12)
+              </div>
+              <p class="card-text">{{ currentShop.location }}</p>
+              <p class="card-text">TELEFONSZÁM</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </template>
-<script setup></script>
+<script setup>
+import Service from '../components/Service.vue';
+import { storeToRefs } from 'pinia';
+import { useShopStore } from '../stores/shop';
+import { useServiceStore } from '../stores/service';
+import { useAuthStore } from '../stores/auth';
+
+const shopStore = useShopStore();
+const { currentShop } = storeToRefs(shopStore);
+const serviceStore = useServiceStore();
+const { shopServices } = storeToRefs(serviceStore);
+const authStore = useAuthStore();
+const { barberId } = storeToRefs(authStore);
+</script>
 <style scoped>
 .hero {
   position: relative;
@@ -75,10 +110,7 @@
   margin: 3rem;
 }
 
-.services {
-  border: green 1px solid;
-}
-.datas {
-  border: red 1px solid;
+.rating {
+  margin: 1rem 0rem;
 }
 </style>
