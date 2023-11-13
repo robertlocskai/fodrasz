@@ -248,7 +248,6 @@ console.log(deleteModal);*/
   align-items: center;
   font-size: 40px;
   font-weight: bold;
-  margin-top: -5rem;
 }
 
 .profileHeader img {
@@ -318,7 +317,6 @@ console.log(deleteModal);*/
   .profileHeader {
     font-size: 28px;
     text-align: center;
-    margin-top: -3rem;
   }
   h4 {
     font-size: 16px;
