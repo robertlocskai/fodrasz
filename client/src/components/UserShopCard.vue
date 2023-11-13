@@ -1,15 +1,16 @@
 <template>
   <div class="col-lg-3 col-md-6 col-sm-12 mt-3">
+    <button
+      v-if="isLoggedIn"
+      class="remove"
+      data-bs-toggle="modal"
+      data-bs-target="#exampleModal2"
+      :data-bs-id="this.shopData._id"
+    >
+      <i class="bi bi-dash"></i>
+    </button>
     <RouterLink :to="`/barbershop/${shopData._id}`" custom v-slot="{ navigate }">
       <div class="card" style="width: 100%" @click="navigate">
-        <button
-          class="remove"
-          data-bs-toggle="modal"
-          data-bs-target="#exampleModal2"
-          :data-bs-id="this.shopData._id"
-        >
-          <i class="bi bi-dash"></i>
-        </button>
         <img
           src="https://www.pulsecarshalton.co.uk/wp-content/uploads/2016/08/jk-placeholder-image.jpg"
           class="card-img-top"
@@ -24,7 +25,13 @@
   </div>
 </template>
 <script setup>
+import { storeToRefs } from 'pinia';
+import { useAuthStore } from '../stores/auth';
 const props = defineProps({ shopData: Object });
+
+// store
+const authStore = useAuthStore();
+const { isLoggedIn } = storeToRefs(authStore);
 </script>
 <style scoped>
 h5 {
@@ -33,6 +40,10 @@ h5 {
 
 .card:hover {
   cursor: pointer;
+}
+
+.card {
+  width: 100%;
 }
 
 .card-text {
@@ -56,6 +67,13 @@ button.remove {
   background-color: #f05151;
   color: white;
   right: 0;
-  margin: 0.5rem;
+  margin-top: 0.5rem;
+  margin-right: 1.2rem;
+  z-index: 1;
+}
+
+.col-lg-3 {
+  min-height: 10rem;
+  position: relative;
 }
 </style>

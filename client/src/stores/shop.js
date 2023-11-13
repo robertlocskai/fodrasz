@@ -50,7 +50,6 @@ export const useShopStore = defineStore('shop', () => {
         );
 
       userShops.value = userShopsReq;
-      console.log(userShops);
     } catch (err) {
       console.error({ err });
     }
@@ -58,7 +57,6 @@ export const useShopStore = defineStore('shop', () => {
 
   async function createShop(shop) {
     try {
-      console.log(shop);
       const { data } = await axios.post(`${API_URI}/shop/create`, shop, {
         headers: {
           Authorization: bearerToken.value
