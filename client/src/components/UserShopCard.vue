@@ -1,24 +1,26 @@
 <template>
   <div class="col-lg-3 col-md-6 col-sm-12 mt-3">
-    <div class="card" style="width: 100%">
-      <button
-        class="remove"
-        data-bs-toggle="modal"
-        data-bs-target="#exampleModal2"
-        :data-bs-id="this.shopData._id"
-      >
-        <i class="bi bi-dash"></i>
-      </button>
-      <img
-        src="https://www.pulsecarshalton.co.uk/wp-content/uploads/2016/08/jk-placeholder-image.jpg"
-        class="card-img-top"
-        :alt="shopData.name"
-      />
-      <div class="card-body">
-        <h5 class="card-title">{{ shopData.name }}</h5>
-        <p class="card-text">Város neve</p>
+    <RouterLink :to="`/barbershop/${shopData._id}`" custom v-slot="{ navigate }">
+      <div class="card" style="width: 100%" @click="navigate">
+        <button
+          class="remove"
+          data-bs-toggle="modal"
+          data-bs-target="#exampleModal2"
+          :data-bs-id="this.shopData._id"
+        >
+          <i class="bi bi-dash"></i>
+        </button>
+        <img
+          src="https://www.pulsecarshalton.co.uk/wp-content/uploads/2016/08/jk-placeholder-image.jpg"
+          class="card-img-top"
+          :alt="shopData.name"
+        />
+        <div class="card-body">
+          <h5 class="card-title">{{ shopData.name }}</h5>
+          <p class="card-text">Város neve</p>
+        </div>
       </div>
-    </div>
+    </RouterLink>
   </div>
 </template>
 <script setup>
@@ -27,6 +29,10 @@ const props = defineProps({ shopData: Object });
 <style scoped>
 h5 {
   font-weight: 700 !important;
+}
+
+.card:hover {
+  cursor: pointer;
 }
 
 .card-text {
