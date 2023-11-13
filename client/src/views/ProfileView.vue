@@ -87,15 +87,10 @@ console.log(deleteModal);*/
         <div class="row">
           <UserShopCard v-for="shop in userShops" :shopData="shop" />
           <div class="addIfHas col-lg-3 col-md-6 col-sm-12 mt-3">
-            <button
-              v-if="userShops.length < 4"
-              id="addIfHas"
-              class="btn btn-primary"
-              data-bs-toggle="modal"
-              data-bs-target="#exampleModal"
-            >
-              <i class="bi bi-plus"></i>
-            </button>
+            <RouterLink :to="{ name: 'createShop' }">
+              <button v-if="userShops.length < 4" id="addIfHas" class="btn btn-primary">
+                <i class="bi bi-plus"></i></button
+            ></RouterLink>
           </div>
         </div>
       </div>
