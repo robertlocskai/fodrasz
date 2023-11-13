@@ -74,16 +74,11 @@ const getById = async (req, res, next) => {
  */
 const createShop = async (req, res, next) => {
   try {
-    const {
-      body: { name, location, phone, open },
-    } = req;
+    const { body, user } = req;
 
     const shop = {
-      ownerId: req.user._id,
-      name,
-      location,
-      phone,
-      open,
+      ownerId: user._id,
+      ...body,
     };
 
     const newShop = await shops.insert(shop);
@@ -94,6 +89,24 @@ const createShop = async (req, res, next) => {
     }
 
     res.json({ newShop });
+  } catch (err) {
+    next(err);
+  }
+};
+
+/**
+ * * test function
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @param {import('express').NextFunction} next
+ */
+const test = async (req, res, next) => {
+  try {
+    console.log(req.body);
+    console.log(req.files);
+    console.log(req.file);
+
+    res.json({ success: true });
   } catch (err) {
     next(err);
   }
@@ -159,6 +172,7 @@ module.exports = {
   getByJWT,
   getById,
   createShop,
+  test,
   updateShop,
   deleteShop,
 };

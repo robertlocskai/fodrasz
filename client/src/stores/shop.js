@@ -55,11 +55,12 @@ export const useShopStore = defineStore('shop', () => {
     }
   }
 
-  async function createShop(shop) {
+  async function createShop(formData) {
     try {
-      const { data } = await axios.post(`${API_URI}/shop/create`, shop, {
+      const { data } = await axios.post(`${API_URI}/shop/test`, formData, {
         headers: {
-          Authorization: bearerToken.value
+          Authorization: bearerToken.value,
+          'Content-Type': 'multipart/form-data'
         }
       });
 

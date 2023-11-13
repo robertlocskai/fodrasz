@@ -3,6 +3,7 @@ const controller = require('./shop.controller');
 const middlewares = require('./shop.middlewares');
 const schemas = require('./shop.schemas');
 const authMiddlewares = require('../auth/auth.middlewares');
+const upload = require('./shop.multer');
 
 const router = express.Router();
 
@@ -12,14 +13,17 @@ router.get('/', controller.getAll);
 // Get logged in user's barber shops
 router.get('/logged-in', authMiddlewares.isLoggedIn, controller.getByJWT);
 
+router.post('/test', upload.array('photos', 10), controller.test);
+
 // Get one barber shop data by id
 router.get('/:id', controller.getById);
 
 // Create a new barber shop
 router.post(
   '/create',
-  authMiddlewares.isLoggedIn,
-  middlewares.validateSchema(schemas.upload),
+  // authMiddlewares.isLoggedIn,
+  // middlewares.validateType,
+  // middlewares.validateSchema(schemas.upload),
   controller.createShop,
 );
 
