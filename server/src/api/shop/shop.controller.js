@@ -22,6 +22,26 @@ const getAll = async (req, res, next) => {
 };
 
 /**
+ * * Lekérdezi a bejelentkezett felhasználó fordászatait
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @param {import('express').NextFunction} next
+ */
+const getByJWT = async (req, res, next) => {
+  try {
+    const {
+      user: { _id: userId },
+    } = req;
+
+    const userShops = await shops.find({ ownerId: userId });
+
+    res.json({ userShops });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
  * * Lekérdez egy fodrászatot az id-ja alapján
  * @param {import('express').Request} req
  * @param {import('express').Response} res
@@ -47,26 +67,6 @@ const getById = async (req, res, next) => {
 };
 
 /**
- * * Lekérdezi a bejelentkezett felhasználó fordászatait
- * @param {import('express').Request} req
- * @param {import('express').Response} res
- * @param {import('express').NextFunction} next
- */
-const getByJWT = async (req, res, next) => {
-  try {
-    const {
-      user: { _id: userId },
-    } = req;
-
-    const userShops = await shops.find({ ownerId: userId });
-
-    res.json({ userShops });
-  } catch (error) {
-    next(error);
-  }
-};
-
-/**
  * * Létrehoz egy fodrászatot
  * @param {import('express').Request} req
  * @param {import('express').Response} res
@@ -74,16 +74,11 @@ const getByJWT = async (req, res, next) => {
  */
 const createShop = async (req, res, next) => {
   try {
-    const {
-      body: { name, location, phone, open },
-    } = req;
+    const { body, user } = req;
 
     const shop = {
-      ownerId: req.user._id,
-      name,
-      location,
-      phone,
-      open,
+      ownerId: user._id,
+      ...body,
     };
 
     const newShop = await shops.insert(shop);
@@ -94,6 +89,24 @@ const createShop = async (req, res, next) => {
     }
 
     res.json({ newShop });
+  } catch (err) {
+    next(err);
+  }
+};
+
+/**
+ * * test function
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @param {import('express').NextFunction} next
+ */
+const test = async (req, res, next) => {
+  try {
+    console.log(req.body);
+    console.log(req.files);
+    console.log(req.file);
+
+    res.json({ success: true });
   } catch (err) {
     next(err);
   }
@@ -156,9 +169,10 @@ const deleteShop = async (req, res, next) => {
 // exportálás
 module.exports = {
   getAll,
-  getById,
   getByJWT,
+  getById,
   createShop,
+  test,
   updateShop,
   deleteShop,
 };

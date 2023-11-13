@@ -34,6 +34,11 @@ const router = createRouter({
       }
     },
     {
+      path: '/create-shop',
+      name: 'createShop',
+      component: () => import('../views/CreateShopView.vue')
+    },
+    {
       path: '/logout',
       name: 'logout',
       component: () => import('../views/LogoutView.vue')

@@ -10,6 +10,11 @@ const storage = multer.diskStorage({
 
     cb(null, tmpImagesPath);
   },
+
+  filename: (req, file, cb) => {
+    const [name, ext] = file.originalname.split('.');
+    cb(null, `${name.trim()}-${uuid()}.${ext}`);
+  },
 });
 
 const whitelist = ['image/png', 'image/jpeg', 'image/jpg', 'image/webp'];

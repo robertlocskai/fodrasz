@@ -1,3 +1,5 @@
+const fs = require('fs/promises');
+const path = require('path');
 const shops = require('./shop.model');
 
 /**
@@ -44,4 +46,46 @@ const validateSchema = (schema) => async (req, res, next) => {
   }
 };
 
-module.exports = { isMine, validateSchema };
+const whitelist = ['image/png', 'image/jpeg', 'image/jpg', 'image/webp'];
+
+const validateType = async (req, res, next) => {
+  try {
+    // eslint-disable-next-line node/no-unsupported-features/es-syntax
+    const { fileTypeFromFile } = await import('file-type');
+    const meta = await fileTypeFromFile(req.file.path);
+
+    if (!meta) throw new Error('File is not allowed.');
+    if (!whitelist.includes(meta.mime)) throw new Error('File is not allowed.');
+
+    // move file from tmp to public
+    const { PUBLIC_IMAGES_PATH } = process.env;
+    const publicImageDirs = PUBLIC_IMAGES_PATH.split('/');
+    const publicImagesPath = path.join(
+      __dirname,
+      '..',
+      '..',
+      ...publicImageDirs,
+      req.file.filename,
+    );
+
+    await fs.rename(req.file.path, publicImagesPath);
+
+    const [, safePublicPath] = publicImagesPath
+      .replaceAll('\\', '/')
+      .split('src/');
+
+    req.file.publicPath = safePublicPath;
+
+    console.log(
+      `File successfully moved file from: ${req.file.path} -> ${publicImagesPath}`,
+    );
+
+    next();
+  } catch (error) {
+    await fs.unlink(req.file.path).catch((e) => console.error(e));
+    console.log(`File removed from ${req.file.path}`);
+    next(error);
+  }
+};
+
+module.exports = { isMine, validateSchema, validateType };

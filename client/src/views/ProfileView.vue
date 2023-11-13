@@ -66,6 +66,7 @@ console.log(deleteModal);*/
     <div class="cover"></div>
     <div class="fadeOut"></div>
   </div>
+
   <div class="container">
     <div class="profileThumbnail"></div>
     <div class="content">
@@ -75,9 +76,11 @@ console.log(deleteModal);*/
       </div>
       <div class="noStore" v-if="userShops.length == 0">
         Még nincs fodrászat létrehozva a fiókodban! Hozz létre egyet!
-        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-          <i class="bi bi-plus"></i>
-        </button>
+        <RouterLink :to="{ name: 'createShop' }">
+          <button class="btn btn-primary">
+            <i class="bi bi-plus"></i>
+          </button>
+        </RouterLink>
       </div>
       <div class="shops mt-4" v-if="userShops.length > 0">
         <h4 class="mb-4">Általad létrehozott fodrászatok ({{ userShops.length }}/4)</h4>
@@ -134,6 +137,11 @@ console.log(deleteModal);*/
       </div>
     </div>
   </div>
+
+  <!-- <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    <i class="bi bi-plus"></i>
+  </button> -->
+
   <div
     class="modal fade"
     id="exampleModal"

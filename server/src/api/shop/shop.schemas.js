@@ -1,5 +1,28 @@
 const Joi = require('joi');
 
+const cities = [
+  'Bács-Kiskun',
+  'Békés',
+  'Baranya',
+  'Borsod-Abaúj-Zemplén',
+  'Budapest',
+  'Csongrád',
+  'Fejér',
+  'Győr-Moson-Sopron',
+  'Hajdú-Bihar',
+  'Heves',
+  'Jász-Nagykun-Szolnok',
+  'Komárom-Esztergom',
+  'Nógrád',
+  'Pest',
+  'Somogy',
+  'Szabolcs-Szatmár-Bereg',
+  'Tolna',
+  'Vas',
+  'Veszprém',
+  'Zala',
+];
+
 const upload = Joi.object({
   name: Joi.string()
     .min(4)
@@ -7,7 +30,13 @@ const upload = Joi.object({
     .pattern(/^[\w\-\s]+$/)
     .required(),
 
-  location: Joi.string().min(10).max(200).required(),
+  address: Joi.string().min(3).max(50).required(),
+  city: Joi.string().min(3).max(35).required(),
+  county: Joi.string()
+    .valid(...cities)
+    .required(),
+  zip: Joi.number().min(4).max(4).required(),
+
   phone: Joi.string().min(9).max(12).required(),
   open: Joi.object({
     hetfo: Joi.object({
@@ -47,7 +76,11 @@ const update = Joi.object({
     .max(32)
     .pattern(/^[\w\-\s]+$/),
 
-  location: Joi.string().min(10).max(200),
+  address: Joi.string().min(3).max(50),
+  city: Joi.string().min(3).max(35),
+  county: Joi.string().valid(...cities),
+  zip: Joi.number().min(4).max(4),
+
   phone: Joi.string().min(9).max(12),
   open: Joi.object({
     hetfo: Joi.object({
@@ -80,7 +113,7 @@ const update = Joi.object({
     }).optional(),
   }).optional(),
 })
-  .or('name', 'location', 'phone', 'open')
+  .or('name', 'address', 'city', 'county', 'zip', 'location', 'phone', 'open')
   .required();
 
 module.exports = { upload, update };
