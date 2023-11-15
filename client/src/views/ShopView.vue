@@ -1,4 +1,65 @@
 <template>
+  <div
+    class="modal fade"
+    id="newServiceModal"
+    tabindex="-1"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Új szolgáltatás hozzáadása</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <div class="container-fluid">
+            <div class="row"><div class="col-12">Szolgáltatás neve:</div></div>
+            <div class="row">
+              <div class="col-12">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="name"
+                  placeholder="Pl.: Férfi hajvágás"
+                />
+              </div>
+            </div>
+            <div class="row"><div class="col-12">Szolgáltatás ára:</div></div>
+            <div class="row">
+              <div class="col-12">
+                <div class="input-group">
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="0"
+                    aria-label="Szolgáltatás ára"
+                    aria-describedby="basic-addon2"
+                  />
+                  <span class="input-group-text" id="basic-addon2">Ft</span>
+                </div>
+              </div>
+            </div>
+            <div class="row"><div class="col-12">Szolgáltatás időtartama:</div></div>
+            <div class="row">
+              <div class="col-12">
+                <input type="text" class="form-control" id="time" placeholder="Pl.: 1 óra" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Mégsem</button>
+          <button type="button" class="btn btn-primary">Létrehozás</button>
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="hero">
     <div class="cover"></div>
     <div class="fadeOut"></div>
@@ -13,7 +74,12 @@
             <Service :serviceData="service" :canEdit="currentShop.ownerId == barberId" />
           </div>
           <div class="row">
-            <button class="btn btn-primary" v-if="currentShop.ownerId == barberId">
+            <button
+              class="btn btn-primary"
+              data-bs-toggle="modal"
+              data-bs-target="#newServiceModal"
+              v-if="currentShop.ownerId == barberId"
+            >
               Új szolgáltatás hozzáadása
             </button>
           </div>
@@ -112,5 +178,9 @@ const { barberId } = storeToRefs(authStore);
 
 .rating {
   margin: 1rem 0rem;
+}
+
+.modal-body .container-fluid .row {
+  margin-top: 0.4rem;
 }
 </style>
