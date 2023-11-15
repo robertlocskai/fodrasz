@@ -90,4 +90,14 @@ button.edit {
   color: white;
   z-index: 1;
 }
+
+i.bi-gear-fill {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+i.bi-gear-fill::before {
+  font-size: 0.75rem;
+}
 </style>
