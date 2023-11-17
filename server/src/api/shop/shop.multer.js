@@ -20,12 +20,12 @@ const storage = multer.diskStorage({
 const whitelist = ['image/png', 'image/jpeg', 'image/jpg', 'image/webp'];
 
 const fileFilter = (req, file, cb) => {
-  if (!whitelist.includes(file.mimetype)) {
-    const error = new Error('File is not allowed.');
-    return cb(error);
-  }
+  if (whitelist.includes(file.mimetype)) return cb(null, true);
 
-  cb(null, true);
+  // todo | ha több fájlt kell kezelni, az első érvénytelen fájl után megszakad a folyamat
+
+  const error = new Error('File is not allowed.');
+  return cb(error);
 };
 
 const upload = multer({ storage, fileFilter });

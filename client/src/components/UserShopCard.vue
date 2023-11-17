@@ -12,7 +12,7 @@
     <RouterLink :to="`/barbershop/${shopData._id}`" custom v-slot="{ navigate }">
       <div class="card" style="width: 100%" @click="navigate">
         <img
-          src="https://www.pulsecarshalton.co.uk/wp-content/uploads/2016/08/jk-placeholder-image.jpg"
+          :src="`http://localhost:3000/${shopData.photos[0]}`"
           class="card-img-top"
           :alt="shopData.name"
         />

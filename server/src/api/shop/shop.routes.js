@@ -13,17 +13,19 @@ router.get('/', controller.getAll);
 // Get logged in user's barber shops
 router.get('/logged-in', authMiddlewares.isLoggedIn, controller.getByJWT);
 
-router.post('/test', upload.array('photos', 10), controller.test);
-
 // Get one barber shop data by id
 router.get('/:id', controller.getById);
 
 // Create a new barber shop
 router.post(
   '/create',
+  upload.array('photos', 10),
+  middlewares.validateType,
+  middlewares.parseJSON('open'),
   // authMiddlewares.isLoggedIn,
   // middlewares.validateType,
   // middlewares.validateSchema(schemas.upload),
+  middlewares.fileRemover,
   controller.createShop,
 );
 

@@ -74,11 +74,14 @@ const getById = async (req, res, next) => {
  */
 const createShop = async (req, res, next) => {
   try {
-    const { body, user } = req;
+    const { body, user, files } = req;
+
+    const safeFiles = files.map((file) => file.publicPath);
 
     const shop = {
       ownerId: user._id,
       ...body,
+      photos: safeFiles,
     };
 
     const newShop = await shops.insert(shop);

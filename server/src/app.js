@@ -2,6 +2,7 @@ const express = require('express');
 const volleyball = require('volleyball');
 const helmet = require('helmet');
 const cors = require('cors');
+const path = require('path');
 const middlewares = require('./app.middlewares');
 const authMiddlewares = require('./api/auth/auth.middlewares');
 const auth = require('./api/auth/auth.routes');
@@ -14,8 +15,8 @@ const app = express();
 
 // middlewares
 app.use(volleyball);
-app.use(helmet());
-app.use(cors());
+app.use(helmet({ crossOriginResourcePolicy: false }));
+app.use(cors({ origin: 'http://localhost:5173' }));
 app.use(express.json());
 app.use(authMiddlewares.processAuthToken);
 app.use(authMiddlewares.checkTokenSetUser);
@@ -30,18 +31,11 @@ app.get('/', (_req, res) => {
   res.json({ message: 'Homepage' });
 });
 
+// serve static files from /public
+app.use('/public', express.static(path.join(__dirname, 'public')));
+
 // error handler
 app.use(middlewares.errorHandler);
 
 // export
 module.exports = app;
-
-// hiányzik
-// shop, reservations, services tesztek megírása
-// services
-//  - GET /:id
-//  - PATCH /update/:id
-//  - DELETE /delete/:id
-
-// reservations
-// meg kell nézni, hogy a serviceID és a shopID között van-e kapcsolat

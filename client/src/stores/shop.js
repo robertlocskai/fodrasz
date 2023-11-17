@@ -17,7 +17,6 @@ export const useShopStore = defineStore('shop', () => {
   // getters
 
   // actions
-
   const API_URI = 'http://localhost:3000/api';
 
   async function fetchAllShops() {
@@ -58,7 +57,7 @@ export const useShopStore = defineStore('shop', () => {
 
   async function createShop(formData) {
     try {
-      const { data } = await axios.post(`${API_URI}/shop/test`, formData, {
+      const { data } = await axios.post(`${API_URI}/shop/create`, formData, {
         headers: {
           Authorization: bearerToken.value,
           'Content-Type': 'multipart/form-data'
