@@ -4,11 +4,10 @@ import { storeToRefs } from 'pinia';
 import { useAuthStore } from '../stores/auth';
 import { useShopStore } from '../stores/shop';
 import UserShopCard from '../components/UserShopCard.vue';
-import router from '../router';
 
 // store
 const authStore = useAuthStore();
-const { isLoggedIn, barberName } = storeToRefs(authStore);
+const { barberName } = storeToRefs(authStore);
 const shopStore = useShopStore();
 const { userShops } = storeToRefs(shopStore);
 const newShop = ref({
@@ -42,11 +41,6 @@ onMounted(() => {
     removeId = shop;
   });
 });
-
-if (!isLoggedIn.value) {
-  router.push({ name: 'home' });
-  console.log('Nem vagy bejelentkezve!');
-}
 
 async function handleRemove() {
   try {
@@ -85,7 +79,7 @@ console.log(deleteModal);*/
       <div class="shops mt-4" v-if="userShops.length > 0">
         <h4 class="mb-4">Általad létrehozott fodrászatok ({{ userShops.length }}/4)</h4>
         <div class="row">
-          <UserShopCard v-for="shop in userShops" :shopData="shop" />
+          <UserShopCard v-for="shop in userShops" :shopData="shop" :key="shop._id" />
           <div class="addIfHas col-lg-3 col-md-6 col-sm-12 mt-3">
             <RouterLink :to="{ name: 'createShop' }">
               <button v-if="userShops.length < 4" id="addIfHas" class="btn btn-primary">

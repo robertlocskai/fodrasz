@@ -75,10 +75,26 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  // ruhák kiszedése
-  // fekete ruhák berakása
-  // szárítógép: ahol most áll || Pamut
-  // szűrő kiszedése & víz kiöntése
+  async function refreshToken() {
+    try {
+      const { data } = await axios.get(`${API_URI}/auth/refresh`, {
+        headers: {
+          Authorization: bearerToken.value
+        }
+      });
+
+      if (!data.token)
+        throw new Error(
+          'Valami hiba történt a refresh-token lekérése közben. Kérlek próbáld újra!'
+        );
+
+      token.value = data.token;
+
+      await setUserByToken();
+    } catch (err) {
+      console.log({ err });
+    }
+  }
 
   function $reset() {
     barber.value = {
@@ -104,6 +120,7 @@ export const useAuthStore = defineStore('auth', () => {
     setUserByToken,
     signup,
     login,
+    refreshToken,
     $reset
   };
 });

@@ -1,3 +1,15 @@
+<script setup>
+import { storeToRefs } from 'pinia';
+import { useAuthStore } from '../stores/auth';
+
+// props
+defineProps({ shopData: Object });
+
+// store
+const authStore = useAuthStore();
+const { isLoggedIn } = storeToRefs(authStore);
+</script>
+
 <template>
   <div class="col-lg-3 col-md-6 col-sm-12 mt-3">
     <button
@@ -18,21 +30,13 @@
         />
         <div class="card-body">
           <h5 class="card-title">{{ shopData.name }}</h5>
-          <p class="card-text">Város neve</p>
+          <p class="card-text">{{ shopData.city }}</p>
         </div>
       </div>
     </RouterLink>
   </div>
 </template>
-<script setup>
-import { storeToRefs } from 'pinia';
-import { useAuthStore } from '../stores/auth';
-const props = defineProps({ shopData: Object });
 
-// store
-const authStore = useAuthStore();
-const { isLoggedIn } = storeToRefs(authStore);
-</script>
 <style scoped>
 h5 {
   font-weight: 700 !important;

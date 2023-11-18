@@ -59,6 +59,7 @@ span.colorized {
 
 span.colorized {
   background: linear-gradient(349deg, #e44141 19.59%, #e46f6f 46.08%);
+  background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }

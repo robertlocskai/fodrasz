@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { storeToRefs } from 'pinia';
 import { useAuthStore } from './auth';
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 import axios from 'axios';
 
 export const useShopStore = defineStore('shop', () => {

@@ -1,3 +1,24 @@
+<script setup>
+import { computed } from 'vue';
+import { storeToRefs } from 'pinia';
+import { useShopStore } from '../stores/shop';
+import { useServiceStore } from '../stores/service';
+import { useAuthStore } from '../stores/auth';
+import Service from '../components/Service.vue';
+
+const shopStore = useShopStore();
+const serviceStore = useServiceStore();
+const authStore = useAuthStore();
+const { currentShop } = storeToRefs(shopStore);
+const { shopServices } = storeToRefs(serviceStore);
+const { barberId } = storeToRefs(authStore);
+
+// computed
+const address = computed(
+  () => `${currentShop.value.zip}, ${currentShop.value.city}, ${currentShop.value.address}`
+);
+</script>
+
 <template>
   <div
     class="modal fade"
@@ -70,7 +91,7 @@
       <!--{{ $route.params.id }}-->
       <div class="row">
         <div class="services col-7">
-          <div class="row" v-for="service in shopServices">
+          <div class="row" v-for="service in shopServices" :key="service._id">
             <Service :serviceData="service" :canEdit="currentShop.ownerId == barberId" />
           </div>
           <div class="row">
@@ -97,8 +118,8 @@
                 <img src="../assets/images/star.svg" alt="star" />
                 (12)
               </div>
-              <p class="card-text">{{ currentShop.location }}</p>
-              <p class="card-text">TELEFONSZÁM</p>
+              <p class="card-text">{{ address }}</p>
+              <p class="card-text">{{ currentShop.phone }}</p>
             </div>
           </div>
         </div>
@@ -106,20 +127,7 @@
     </div>
   </div>
 </template>
-<script setup>
-import Service from '../components/Service.vue';
-import { storeToRefs } from 'pinia';
-import { useShopStore } from '../stores/shop';
-import { useServiceStore } from '../stores/service';
-import { useAuthStore } from '../stores/auth';
 
-const shopStore = useShopStore();
-const { currentShop } = storeToRefs(shopStore);
-const serviceStore = useServiceStore();
-const { shopServices } = storeToRefs(serviceStore);
-const authStore = useAuthStore();
-const { barberId } = storeToRefs(authStore);
-</script>
 <style scoped>
 .hero {
   position: relative;

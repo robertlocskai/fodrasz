@@ -16,7 +16,7 @@ const barbers = require('./auth.model');
 const respondWithToken = (user, res, next) => {
   const { password, iat, exp, ...payload } = user;
 
-  jwt.sign(payload, process.env.SECRET, { expiresIn: '1h' }, (err, token) => {
+  jwt.sign(payload, process.env.SECRET, { expiresIn: '6m' }, (err, token) => {
     if (err) return next(err);
 
     res.json({ token });
