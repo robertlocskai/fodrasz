@@ -1,3 +1,7 @@
+<script setup>
+defineProps({ serviceData: Object, canEdit: Boolean });
+</script>
+
 <template>
   <div class="card">
     <div class="card-body">
@@ -25,9 +29,7 @@
     </div>
   </div>
 </template>
-<script setup>
-const props = defineProps({ serviceData: Object, canEdit: Boolean });
-</script>
+
 <style scoped>
 .servicePrice {
   float: right;

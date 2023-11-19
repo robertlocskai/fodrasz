@@ -7,9 +7,11 @@ import UserShopCard from '../components/UserShopCard.vue';
 
 // store
 const authStore = useAuthStore();
-const { barberName } = storeToRefs(authStore);
 const shopStore = useShopStore();
+const { barberName } = storeToRefs(authStore);
 const { userShops } = storeToRefs(shopStore);
+
+// refs
 const newShop = ref({
   name: '',
   location: '',
@@ -25,6 +27,16 @@ async function handleSubmit() {
     console.error({ err });
   }
 }
+
+async function handleRemove() {
+  try {
+    await shopStore.deleteShop(removeId);
+  } catch (err) {
+    console.error({ err });
+  }
+}
+
+// hooks
 let removeId = '';
 
 onMounted(() => {
@@ -42,13 +54,6 @@ onMounted(() => {
   });
 });
 
-async function handleRemove() {
-  try {
-    await shopStore.deleteShop(removeId);
-  } catch (err) {
-    console.error({ err });
-  }
-}
 /*const deleteModal = this.$refs.deleteModal;
 console.log(deleteModal);*/
 

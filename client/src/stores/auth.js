@@ -96,6 +96,27 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
+  async function replaceTokenIfOld() {
+    if (!isLoggedIn.value) return;
+
+    try {
+      const exp = barber.value.exp * 1000;
+      const now = new Date().getTime();
+      const timeToExp = Math.floor((exp - now) / 1000);
+
+      if (timeToExp <= 1) return;
+
+      console.log(`Time till token expires in seconds: ${timeToExp}`);
+
+      if (timeToExp < 300) {
+        // refresh token-t kérünk
+        await refreshToken();
+      }
+    } catch (err) {
+      console.error({ err });
+    }
+  }
+
   function $reset() {
     barber.value = {
       _id: '',
@@ -121,6 +142,7 @@ export const useAuthStore = defineStore('auth', () => {
     signup,
     login,
     refreshToken,
+    replaceTokenIfOld,
     $reset
   };
 });

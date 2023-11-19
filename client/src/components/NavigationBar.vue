@@ -95,6 +95,7 @@ const { isLoggedIn, barberName } = storeToRefs(authStore);
     </div>
   </nav>
 </template>
+
 <style scoped>
 .profileLink {
   text-decoration: none;

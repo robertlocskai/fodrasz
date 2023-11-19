@@ -58,13 +58,13 @@ const refreshToken = async (req, res, next) => {
     }
 
     // lejárati idő számítása
-    const expTime = user.exp * 1000;
-    const currTime = new Date().getTime();
-    const timeToExpire = (expTime - currTime) / 1000;
-    const timeLimit = 60;
+    const exp = user.exp * 1000;
+    const now = new Date().getTime();
+    const timetoExp = Math.floor((exp - now) / 1000);
+    const timeLimit = 300;
 
     // ha a token még több mint {timeLimit} másodpecig akív, visszatérünk egy hibaüzenettel
-    if (timeToExpire > timeLimit) {
+    if (timetoExp > timeLimit) {
       res.status(422);
       throw new Error(
         `A megadott token még nem most fog lejárni! Kérlek próbálkozz később!`,

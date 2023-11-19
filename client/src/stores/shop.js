@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { storeToRefs } from 'pinia';
 import { useAuthStore } from './auth';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import axios from 'axios';
 
 export const useShopStore = defineStore('shop', () => {
@@ -10,11 +10,14 @@ export const useShopStore = defineStore('shop', () => {
   const userShops = ref([]);
   const currentShop = ref([]);
 
+  // const testShop = ref(shops.value.filter(shop => shop.ownerId === ) || []);
+
   //stores
   const authStore = useAuthStore();
-  const { bearerToken } = storeToRefs(authStore);
+  const { barberId, bearerToken } = storeToRefs(authStore);
 
   // getters
+  const testGetter = computed(() => shops.value.filter((shop) => shop.ownerId === barberId.value));
 
   // actions
   const API_URI = 'http://localhost:3000/api';
@@ -116,6 +119,7 @@ export const useShopStore = defineStore('shop', () => {
     fetchUserShops,
     createShop,
     deleteShop,
-    fetchUserShopById
+    fetchUserShopById,
+    testGetter
   };
 });

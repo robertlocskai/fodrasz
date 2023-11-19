@@ -1,157 +1,22 @@
 <script setup>
-import { computed, ref } from 'vue';
-import { useShopStore } from '../stores/shop';
+import { useServiceStore } from '../stores/service';
 
-// store
-const shopStore = useShopStore();
-
-// state
-const cities = [
-  'Bács-Kiskun',
-  'Békés',
-  'Baranya',
-  'Borsod-Abaúj-Zemplén',
-  'Budapest',
-  'Csongrád',
-  'Fejér',
-  'Győr-Moson-Sopron',
-  'Hajdú-Bihar',
-  'Heves',
-  'Jász-Nagykun-Szolnok',
-  'Komárom-Esztergom',
-  'Nógrád',
-  'Pest',
-  'Somogy',
-  'Szabolcs-Szatmár-Bereg',
-  'Tolna',
-  'Vas',
-  'Veszprém',
-  'Zala'
-];
-
-const shop = ref({
-  name: '',
-  phone: '',
-  address: '',
-  city: '',
-  county: '',
-  zip: '',
-  open: {
-    hetfo: {
-      opens: '',
-      closes: '',
-      type: 'workday'
-    },
-    kedd: {
-      opens: '',
-      closes: '',
-      type: 'workday'
-    },
-    szerda: {
-      opens: '',
-      closes: '',
-      type: 'workday'
-    },
-    csutortok: {
-      opens: '',
-      closes: '',
-      type: 'workday'
-    },
-    pentek: {
-      opens: '',
-      closes: '',
-      type: 'workday'
-    },
-    szombat: {
-      opens: '',
-      closes: '',
-      type: 'freeday'
-    },
-    vasarnap: {
-      opens: '',
-      closes: '',
-      type: 'freeday'
-    }
-  }
-});
-
-// computed
-const isClosedOnSaturday = computed(() => {
-  if (!shop.value.open.szombat.opens && !shop.value.open.szombat.closes) return true;
-
-  return false;
-});
-
-const isClosedOnSunday = computed(() => {
-  if (!shop.value.open.vasarnap.opens && !shop.value.open.vasarnap.closes) return true;
-
-  return false;
-});
+// stores
+const serviceStore = useServiceStore();
 
 // functions
-function resetSaturday(e) {
-  shop.value.open.szombat.opens = '';
-  shop.value.open.szombat.closes = '';
-  e.target.checked = true;
-}
-
-function resetSunday(e) {
-  shop.value.open.vasarnap.opens = '';
-  shop.value.open.vasarnap.closes = '';
-  e.target.checked = true;
-}
-
 async function handleSubmit() {
   try {
-    const formData = new FormData();
-    const imageElement = document.getElementById('photos');
-    const images = imageElement.files;
-
-    formData.append('name', shop.value.name);
-    formData.append('address', shop.value.address);
-    formData.append('city', shop.value.city);
-    formData.append('county', shop.value.county);
-    formData.append('zip', shop.value.zip);
-    formData.append('phone', shop.value.phone);
-    formData.append('open', JSON.stringify(shop.value.open));
-
-    for (let i = 0; i < images.length; i++) {
-      formData.append('photos', images[i]);
-    }
-
-    await shopStore.createShop(formData);
+    await serviceStore.createService();
   } catch (err) {
     console.error({ err });
-  }
-}
-
-function initPreview(e) {
-  const photos = e.target.files;
-  const container = document.getElementById('preview');
-
-  for (const photo of photos) {
-    const url = URL.createObjectURL(photo);
-    const img = document.createElement('img');
-    img.src = url;
-
-    console.log({ url });
-
-    const colEl = document.createElement('div');
-    colEl.classList.add('col');
-
-    const cardEl = document.createElement('div');
-    cardEl.classList.add('card', 'h-100');
-
-    cardEl.appendChild(img);
-    colEl.appendChild(cardEl);
-    container.appendChild(colEl);
   }
 }
 </script>
 
 <template>
   <div class="hero">
-    <div class="heroText">
+    <div class="heroText d-none">
       <p id="title">
         Szerednéd, hogy fodrászatod <br class="heroBreak" /><span class="colorized">többen</span>
         ismerjék?
@@ -167,7 +32,7 @@ function initPreview(e) {
 
   <div class="container">
     <div class="row">
-      <div class="h3 text-center">Fodrászat hozzáadása</div>
+      <div class="h3 text-center">Szolgáltatás hozzáadása</div>
       <div class="h5 my-5">
         <span class="p-3 border border-dark rounded"
           >Adatok <i class="bi bi-clipboard-data"></i
@@ -175,45 +40,23 @@ function initPreview(e) {
       </div>
 
       <div class="col-6">
-        <form @submit.prevent="handleSubmit" enctype="multipart/form-data" class="row g-3">
+        <form @submit.prevent="handleSubmit" class="row g-3">
           <div class="col-md-6">
             <label for="inputName" clagis="form-label">Fodrászat neve</label>
-            <input v-model="shop.name" type="text" class="form-control" id="inputName" />
+            <input type="text" class="form-control" id="inputName" />
           </div>
           <div class="col-md-6">
             <label for="inputPhone" class="form-label">Telefonszám</label>
-            <input v-model="shop.phone" type="tel" class="form-control" id="inputPhone" />
+            <input type="tel" class="form-control" id="inputPhone" />
           </div>
           <div class="col-6">
             <label for="inputAddress" class="form-label">Cím</label>
             <input
-              v-model="shop.address"
               type="text"
               class="form-control"
               id="inputAddress"
               placeholder="Pl.: Kenyérmező utca 5"
             />
-          </div>
-          <div class="col-md-6">
-            <label for="inputCity" class="form-label">Város</label>
-            <input v-model="shop.city" type="text" class="form-control" id="inputCity" />
-          </div>
-          <div class="col-md-6">
-            <label for="inputState" class="form-label">Megye</label>
-            <select v-model="shop.county" id="inputState" class="form-select">
-              <option
-                v-for="(city, index) in cities"
-                :key="index"
-                :selected="city === 'Komárom-Esztergom'"
-                :value="city"
-              >
-                {{ city }}
-              </option>
-            </select>
-          </div>
-          <div class="col-md-6">
-            <label for="inputZip" class="form-label">Irányítószám</label>
-            <input v-model="shop.zip" type="number" class="form-control" id="inputZip" />
           </div>
 
           <div class="col-md-12">
@@ -227,7 +70,6 @@ function initPreview(e) {
                 <h6>Hétköznap</h6>
                 <label for="inputOpenWorkdays" class="form-label">Nyitás</label>
                 <input
-                  v-model="shop.open.hetfo.opens"
                   type="time"
                   class="form-control mb-3"
                   name="inputOpenWorkdays"
@@ -236,7 +78,6 @@ function initPreview(e) {
 
                 <label for="inputCloseWorkdays" class="form-label">Zárás</label>
                 <input
-                  v-model="shop.open.hetfo.closes"
                   type="time"
                   class="form-control"
                   name="inputCloseWorkdays"
@@ -248,7 +89,6 @@ function initPreview(e) {
                 <h6>Szombat</h6>
                 <label for="inputOpenSaturday" class="form-label mb-0">Nyitás</label>
                 <input
-                  v-model="shop.open.szombat.opens"
                   type="time"
                   class="form-control mb-3"
                   name="inputOpenSaturday"
@@ -257,7 +97,6 @@ function initPreview(e) {
 
                 <label for="inputCloseSaturday" class="form-label mb-0">Zárás</label>
                 <input
-                  v-model="shop.open.szombat.closes"
                   type="time"
                   class="form-control mb-2"
                   name="inputCloseSaturday"
@@ -265,13 +104,7 @@ function initPreview(e) {
                 />
 
                 <div>
-                  <input
-                    @click="resetSaturday"
-                    type="checkbox"
-                    class="form-check-input"
-                    id="closedCheckSaturday"
-                    :checked="isClosedOnSaturday"
-                  />
+                  <input type="checkbox" class="form-check-input" id="closedCheckSaturday" />
                   <label class="form-check-label ms-2" for="closedCheckSaturday">Zárva?</label>
                 </div>
               </div>
@@ -295,13 +128,7 @@ function initPreview(e) {
                 />
 
                 <div>
-                  <input
-                    @click="resetSunday"
-                    type="checkbox"
-                    class="form-check-input"
-                    id="closedCheckSunday"
-                    :checked="isClosedOnSunday"
-                  />
+                  <input type="checkbox" class="form-check-input" id="closedCheckSunday" />
                   <label class="form-check-label ms-2" for="closedCheckSunday">Zárva?</label>
                 </div>
               </div>
@@ -314,17 +141,8 @@ function initPreview(e) {
 
           <div class="col-md-10 mb-4">
             <label for="photos" class="form-label">Képek a fodrászatról</label>
-            <input
-              @input="initPreview"
-              class="form-control"
-              type="file"
-              id="photos"
-              name="photos"
-              multiple
-            />
+            <input class="form-control" type="file" id="photos" name="photos" multiple />
           </div>
-
-          <div class="row row-cols-1 rol-cols-md-3 row-cols-lg-4" id="preview"></div>
 
           <div class="col-12">
             <button type="submit" class="btn btn-primary">Fodrászat hozzáadása</button>
@@ -385,7 +203,6 @@ span.colorized {
 }
 
 .container {
-  margin-top: 20rem;
   position: absolute;
   left: 50%;
   padding: 1rem 1rem 5rem 1rem;

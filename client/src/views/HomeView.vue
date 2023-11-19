@@ -1,3 +1,13 @@
+<script setup>
+import { storeToRefs } from 'pinia';
+import { useShopStore } from '../stores/shop';
+import ShopCard from '../components/ShopCard.vue';
+
+// stores
+const shopStore = useShopStore();
+const { shops } = storeToRefs(shopStore);
+</script>
+
 <template>
   <div class="hero">
     <div class="heroText">
@@ -15,6 +25,12 @@
   <div class="container">
     <div class="content">
       <h4>Legjobb értékelések</h4>
+
+      <div class="row row-cols-1 rowl-cols-md-2 row-cols-lg-3">
+        <div v-for="shop in shops" :key="shop._id" class="col">
+          <ShopCard :shopData="shop"></ShopCard>
+        </div>
+      </div>
     </div>
   </div>
 </template>

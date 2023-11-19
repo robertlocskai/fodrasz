@@ -1,10 +1,11 @@
 <script setup>
 import { computed } from 'vue';
+import { RouterLink } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import { useShopStore } from '../stores/shop';
 import { useServiceStore } from '../stores/service';
 import { useAuthStore } from '../stores/auth';
-import Service from '../components/Service.vue';
+import ServiceCard from '../components/ServiceCard.vue';
 
 const shopStore = useShopStore();
 const serviceStore = useServiceStore();
@@ -92,17 +93,18 @@ const address = computed(
       <div class="row">
         <div class="services col-7">
           <div class="row" v-for="service in shopServices" :key="service._id">
-            <Service :serviceData="service" :canEdit="currentShop.ownerId == barberId" />
+            <ServiceCard :serviceData="service" :canEdit="currentShop.ownerId == barberId" />
           </div>
           <div class="row">
-            <button
-              class="btn btn-primary"
-              data-bs-toggle="modal"
-              data-bs-target="#newServiceModal"
-              v-if="currentShop.ownerId == barberId"
-            >
-              Új szolgáltatás hozzáadása
-            </button>
+            <RouterLink :to="{ name: 'createService' }" custom v-slot="{ navigate }">
+              <button
+                v-if="currentShop.ownerId == barberId"
+                @click="navigate"
+                class="btn btn-primary"
+              >
+                Új szolgáltatás hozzáadása
+              </button>
+            </RouterLink>
           </div>
         </div>
         <div class="col-5">
