@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { RouterLink } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import { useShopStore } from '../stores/shop';
@@ -18,6 +18,30 @@ const { barberId } = storeToRefs(authStore);
 const address = computed(
   () => `${currentShop.value.zip}, ${currentShop.value.city}, ${currentShop.value.address}`
 );
+
+// refs
+const newService = ref({
+  name: '',
+  price: '',
+  time: ''
+});
+
+// functions
+async function handleSubmit() {
+  try {
+    const serviceObject = {
+      shopId: currentShop.value._id,
+      name: newService.value.name,
+      price: parseInt(newService.value.price),
+      appointment: newService.value.time
+    };
+    //TODO: SCHEMA VALIDATION
+    console.log(serviceObject);
+    await serviceStore.createService(serviceObject);
+  } catch (err) {
+    console.error({ err });
+  }
+}
 </script>
 
 <template>
@@ -45,6 +69,7 @@ const address = computed(
             <div class="row">
               <div class="col-12">
                 <input
+                  v-model="newService.name"
                   type="text"
                   class="form-control"
                   id="name"
@@ -57,6 +82,7 @@ const address = computed(
               <div class="col-12">
                 <div class="input-group">
                   <input
+                    v-model="newService.price"
                     type="text"
                     class="form-control"
                     placeholder="0"
@@ -70,14 +96,20 @@ const address = computed(
             <div class="row"><div class="col-12">Szolgáltatás időtartama:</div></div>
             <div class="row">
               <div class="col-12">
-                <input type="text" class="form-control" id="time" placeholder="Pl.: 1 óra" />
+                <input
+                  v-model="newService.time"
+                  type="text"
+                  class="form-control"
+                  id="time"
+                  placeholder="Pl.: 1 óra"
+                />
               </div>
             </div>
           </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Mégsem</button>
-          <button type="button" class="btn btn-primary">Létrehozás</button>
+          <button type="button" class="btn btn-primary" @click="handleSubmit()">Létrehozás</button>
         </div>
       </div>
     </div>
@@ -91,12 +123,15 @@ const address = computed(
     <div class="content">
       <!--{{ $route.params.id }}-->
       <div class="row">
-        <div class="services col-7">
+        <div class="services col-sm-12 col-lg-7">
+          <div class="row" v-if="shopServices.length == 0">
+            <div class="noService">Jelenleg ennek a fodrászatnak nincs szolgáltatása.</div>
+          </div>
           <div class="row" v-for="service in shopServices" :key="service._id">
             <ServiceCard :serviceData="service" :canEdit="currentShop.ownerId == barberId" />
           </div>
           <div class="row">
-            <RouterLink :to="{ name: 'createService' }" custom v-slot="{ navigate }">
+            <!--<RouterLink :to="{ name: 'createService' }" custom v-slot="{ navigate }">
               <button
                 v-if="currentShop.ownerId == barberId"
                 @click="navigate"
@@ -104,10 +139,18 @@ const address = computed(
               >
                 Új szolgáltatás hozzáadása
               </button>
-            </RouterLink>
+            </RouterLink>-->
+            <button
+              v-if="currentShop.ownerId == barberId"
+              class="btn btn-primary"
+              data-bs-toggle="modal"
+              data-bs-target="#newServiceModal"
+            >
+              Új szolgáltatás hozzáadása
+            </button>
           </div>
         </div>
-        <div class="col-5">
+        <div class="col-sm-12 col-lg-5">
           <div class="dataPanel card text-center">
             <div class="card-header">Fodrászat adatok</div>
             <div class="card-body">
@@ -192,5 +235,21 @@ const address = computed(
 
 .modal-body .container-fluid .row {
   margin-top: 0.4rem;
+}
+
+.noService {
+  width: 100%;
+  height: 10rem;
+  display: flex;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 991px) {
+  .content {
+    margin-left: 0px;
+    margin-right: 0px;
+  }
 }
 </style>
